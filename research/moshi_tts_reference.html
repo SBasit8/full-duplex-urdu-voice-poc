@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moshi TTS — Complete Technical Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0e10;
+  --bg2: #141518;
+  --bg3: #1b1d21;
+  --bg4: #222428;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #e8e4d9;
+  --text2: #8a8880;
+  --text3: #504e4a;
+  --amber: #f0a020;
+  --amber2: #ffc84a;
+  --amber-dim: rgba(240,160,32,0.12);
+  --amber-glow: rgba(240,160,32,0.06);
+  --teal: #2ec4b6;
+  --teal-dim: rgba(46,196,182,0.10);
+  --purple: #9b72cf;
+  --purple-dim: rgba(155,114,207,0.10);
+  --green: #56b870;
+  --green-dim: rgba(86,184,112,0.10);
+  --red: #e05c5c;
+  --red-dim: rgba(224,92,92,0.10);
+  --blue: #4a9eda;
+  --blue-dim: rgba(74,158,218,0.10);
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Fraunces', Georgia, serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+  border-bottom: 1px solid var(--border2);
+  padding: 48px 48px 36px;
+  background: linear-gradient(180deg, rgba(240,160,32,0.04) 0%, transparent 100%);
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(240,160,32,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.header-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+.header h1 {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+.header h1 em {
+  font-style: italic;
+  color: var(--amber2);
+}
+.header-sub {
+  font-size: 12px;
+  color: var(--text2);
+  max-width: 680px;
+  line-height: 1.6;
+}
+.header-meta {
+  display: flex;
+  gap: 28px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.meta-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.meta-val {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--amber);
+}
+
+/* ── LAYOUT ── */
+.main { padding: 0 48px 64px; }
+
+/* ── SECTION HEADING ── */
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 48px 0 20px;
+}
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.section-num {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--border);
+  margin-bottom: 32px;
+}
+.ov-card {
+  background: var(--bg2);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.ov-card:hover { background: var(--bg3); }
+.ov-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-bottom: 4px;
+}
+.ov-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+.ov-val {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.ov-unit {
+  font-size: 10px;
+  color: var(--text2);
+  font-weight: 300;
+}
+
+/* ── ARCHITECTURE BLOCK ── */
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.arch-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.arch-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  border-radius: 2px 0 0 2px;
+}
+.arch-card.amber::before { background: var(--amber); }
+.arch-card.teal::before { background: var(--teal); }
+.arch-card.purple::before { background: var(--purple); }
+.arch-card.green::before { background: var(--green); }
+.arch-card.blue::before { background: var(--blue); }
+.arch-card.red::before { background: var(--red); }
+.arch-name {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.arch-card.amber .arch-name { color: var(--amber); }
+.arch-card.teal .arch-name { color: var(--teal); }
+.arch-card.purple .arch-name { color: var(--purple); }
+.arch-card.green .arch-name { color: var(--green); }
+.arch-card.blue .arch-name { color: var(--blue); }
+.arch-card.red .arch-name { color: var(--red); }
+.arch-body { font-size: 12px; color: var(--text2); line-height: 1.7; }
+.arch-stat {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 2px 2px 0 0;
+}
+.arch-card.amber .arch-stat { background: var(--amber-dim); color: var(--amber2); }
+.arch-card.teal .arch-stat { background: var(--teal-dim); color: var(--teal); }
+.arch-card.purple .arch-stat { background: var(--purple-dim); color: var(--purple); }
+.arch-card.green .arch-stat { background: var(--green-dim); color: var(--green); }
+.arch-card.blue .arch-stat { background: var(--blue-dim); color: var(--blue); }
+.arch-card.red .arch-stat { background: var(--red-dim); color: var(--red); }
+
+/* ── PHASE TIMELINE ── */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 8px;
+  width: 1px;
+  height: calc(100% - 16px);
+  background: linear-gradient(180deg, var(--amber) 0%, var(--amber-dim) 100%);
+}
+.phase {
+  position: relative;
+  margin-bottom: 4px;
+}
+.phase::before {
+  content: '';
+  position: absolute;
+  left: -27px; top: 14px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+  background: var(--bg);
+  z-index: 1;
+}
+.phase-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.phase-box:hover { border-color: var(--border2); }
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg3);
+  border-bottom: 1px solid transparent;
+  transition: background 0.15s;
+}
+.phase-header:hover { background: var(--bg4); }
+.phase-header.open { border-bottom-color: var(--border); }
+.phase-num {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text3);
+  flex-shrink: 0;
+  width: 56px;
+}
+.phase-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+}
+.phase-badge {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  border-radius: 99px;
+}
+.badge-amber { background: var(--amber-dim); color: var(--amber2); }
+.badge-teal  { background: var(--teal-dim);  color: var(--teal); }
+.badge-purple{ background: var(--purple-dim); color: var(--purple); }
+.badge-green { background: var(--green-dim); color: var(--green); }
+.badge-blue  { background: var(--blue-dim);  color: var(--blue); }
+.phase-chevron {
+  font-size: 10px;
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.phase-chevron.open { transform: rotate(90deg); }
+.phase-body {
+  display: none;
+  padding: 18px 18px 18px 18px;
+}
+.phase-body.open { display: block; }
+
+/* ── PHASE BODY INTERNALS ── */
+.phase-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.phase-cell {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.cell-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 5px;
+}
+.cell-val {
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.cell-val strong { color: var(--amber2); font-weight: 500; }
+.phase-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.75;
+  border-left: 2px solid var(--border2);
+  padding-left: 14px;
+  margin-top: 4px;
+}
+.phase-desc strong { color: var(--text); font-weight: 500; }
+
+/* ── DATASET TABLE ── */
+.dataset-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+.dataset-table th {
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.dataset-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.dataset-table tr:last-child td { border-bottom: none; }
+.dataset-table tr:hover td { background: rgba(255,255,255,0.02); }
+.dataset-table td:first-child { color: var(--text); font-weight: 500; }
+.tag {
+  display: inline-block;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ── TOKEN FLOW DIAGRAM ── */
+.dsm-diagram {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  overflow-x: auto;
+}
+.dsm-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 10px;
+}
+.dsm-row:last-child { margin-bottom: 0; }
+.dsm-label {
+  font-size: 10px;
+  color: var(--text2);
+  width: 90px;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+.dsm-tokens {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.tok {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 7px;
+  border-radius: 4px;
+  min-width: 34px;
+  letter-spacing: 0.03em;
+  border: 1px solid;
+}
+.tok-text { background: var(--blue-dim); color: var(--blue); border-color: rgba(74,158,218,0.25); }
+.tok-audio { background: var(--amber-dim); color: var(--amber2); border-color: rgba(240,160,32,0.25); }
+.tok-pad { background: var(--bg3); color: var(--text3); border-color: var(--border); }
+.tok-arrow { background: transparent; color: var(--text3); border: none; font-size: 14px; min-width: 18px; padding: 0; }
+.dsm-delay {
+  font-size: 10px;
+  color: var(--amber);
+  padding: 2px 8px;
+  background: var(--amber-dim);
+  border-radius: 4px;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* ── RESOURCES BAR CHART ── */
+.resource-list { margin-bottom: 16px; }
+.res-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.res-label { font-size: 11px; color: var(--text2); width: 200px; flex-shrink: 0; }
+.res-bar-wrap {
+  flex: 1;
+  height: 20px;
+  background: var(--bg3);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.res-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+.res-val { font-size: 10px; color: var(--text); font-weight: 500; white-space: nowrap; }
+.res-note { font-size: 10px; color: var(--text3); width: 130px; flex-shrink: 0; }
+
+/* ── COMPARISON TABLE ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+.compare-table th {
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 8px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.compare-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+.compare-table td:first-child { color: var(--text); }
+.win { color: var(--green); font-weight: 500; }
+.mid { color: var(--amber); font-weight: 500; }
+.low { color: var(--red); font-weight: 500; }
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 3px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.callout strong { font-weight: 500; }
+.callout-amber { border-color: var(--amber); background: var(--amber-glow); color: var(--text2); }
+.callout strong.amber { color: var(--amber2); }
+.callout-teal { border-color: var(--teal); background: var(--teal-dim); color: var(--text2); }
+.callout strong.teal { color: var(--teal); }
+
+/* ── FOOTNOTE ── */
+.footnote {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.8;
+}
+.footnote a { color: var(--text2); text-decoration: none; }
+.footnote a:hover { color: var(--amber); }
+
+/* ── FULL WIDTH ARCH CARD ── */
+.arch-card.full { grid-column: 1 / -1; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .header { padding: 32px 24px 24px; }
+  .main { padding: 0 24px 48px; }
+  .overview-grid { grid-template-columns: repeat(2, 1fr); }
+  .arch-grid { grid-template-columns: 1fr; }
+  .phase-row { grid-template-columns: 1fr 1fr; }
+  .header-meta { gap: 18px; }
+}
+@media (max-width: 560px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .phase-row { grid-template-columns: 1fr; }
+  .header h1 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">Technical Reference · Kyutai Research · 2024–2025</div>
+  <h1>Moshi <em>TTS</em><br>Complete Technical Reference</h1>
+  <p class="header-sub">
+    The multi-stream streaming text-to-speech model built from scratch by the Kyutai team to generate
+    20,000+ hours of synthetic dialogue data for training the Moshi voice agent. Later open-sourced as
+    Kyutai TTS 1.6B (July 2025).
+  </p>
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-label">Total Parameters</span>
+      <span class="meta-val">1.6 B</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Pretraining Data</span>
+      <span class="meta-val">2.5 M hrs</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Fine-tune Data</span>
+      <span class="meta-val">170 hrs</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Synthetic Output</span>
+      <span class="meta-val">20,000+ hrs</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Latency</span>
+      <span class="meta-val">220 ms</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Audio Codec</span>
+      <span class="meta-val">Mimi 24kHz</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ── SECTION 1: OVERVIEW ── -->
+<div class="section-heading">
+  <span class="section-num">01</span>
+  <span class="section-title">Key Numbers at a Glance</span>
+</div>
+
+<div class="overview-grid">
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--amber)"></div>
+    <div class="ov-label">Backbone Transformer</div>
+    <div class="ov-val">1 B<span class="ov-unit"> params</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--teal)"></div>
+    <div class="ov-label">Depth Transformer</div>
+    <div class="ov-val">600 M<span class="ov-unit"> params (shared)</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--purple)"></div>
+    <div class="ov-label">Pre-training Compute</div>
+    <div class="ov-val">32<span class="ov-unit"> × H100</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--green)"></div>
+    <div class="ov-label">Frame Rate (Mimi)</div>
+    <div class="ov-val">12.5<span class="ov-unit"> Hz / 24 kHz</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--blue)"></div>
+    <div class="ov-label">Codebooks per Frame</div>
+    <div class="ov-val">32<span class="ov-unit"> audio tokens</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--amber)"></div>
+    <div class="ov-label">Text→Audio Delay</div>
+    <div class="ov-val">1.28<span class="ov-unit"> sec (16 steps)</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--teal)"></div>
+    <div class="ov-label">WER (English)</div>
+    <div class="ov-val">2.82<span class="ov-unit"> %</span></div>
+  </div>
+  <div class="ov-card">
+    <div class="ov-dot" style="background:var(--purple)"></div>
+    <div class="ov-label">Speaker Similarity</div>
+    <div class="ov-val">77+<span class="ov-unit"> %</span></div>
+  </div>
+</div>
+
+<!-- ── SECTION 2: ARCHITECTURE ── -->
+<div class="section-heading">
+  <span class="section-num">02</span>
+  <span class="section-title">Architecture Components</span>
+</div>
+
+<div class="arch-grid">
+  <div class="arch-card amber">
+    <div class="arch-name">BACKBONE — TEMPORAL TRANSFORMER</div>
+    <div class="arch-body">
+      The main 1B-parameter Transformer that processes the text token stream and generates
+      the first codebook of audio tokens (semantic layer). Runs at 12.5 Hz.
+      Text tokens are shifted <strong style="color:var(--amber2)">1.28 seconds ahead</strong> of audio
+      tokens — the model sees upcoming text before it needs to speak it.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">1B params</span>
+      <span class="arch-stat">12.5 Hz</span>
+      <span class="arch-stat">decoder-only</span>
+      <span class="arch-stat">causal attention</span>
+    </div>
+  </div>
+
+  <div class="arch-card teal">
+    <div class="arch-name">DEPTH TRANSFORMER</div>
+    <div class="arch-body">
+      A 600M-parameter small Transformer that fills in codebooks 2–32 given the
+      semantic token from codebook 1. Uses <strong style="color:var(--teal)">partial weight sharing</strong>
+      (same design as Kyutai's Hibiki model) to keep parameters efficient while maintaining quality
+      across all 32 audio codebook levels.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">600M params</span>
+      <span class="arch-stat">codebooks 2–32</span>
+      <span class="arch-stat">weight sharing</span>
+    </div>
+  </div>
+
+  <div class="arch-card purple">
+    <div class="arch-name">MIMI CODEC — AUDIO TOKENIZER</div>
+    <div class="arch-body">
+      The same neural audio codec used inside Moshi. Encodes 24kHz audio at 1.1 kbps
+      using Residual Vector Quantization (RVQ) into 32 codebooks at 12.5 frames/sec.
+      Codebook 1 carries semantic phoneme information (distilled from WavLM).
+      The TTS generates Mimi tokens; Mimi's decoder converts them to waveform.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">24 kHz</span>
+      <span class="arch-stat">1.1 kbps</span>
+      <span class="arch-stat">RVQ × 32</span>
+      <span class="arch-stat">WavLM distilled</span>
+    </div>
+  </div>
+
+  <div class="arch-card green">
+    <div class="arch-name">DSM — DELAYED STREAMS MODELING</div>
+    <div class="arch-body">
+      The core technique. Text and audio run as <strong style="color:var(--green)">two parallel time-aligned streams</strong>
+      with a fixed delay between them. By making text ahead of audio, the model predicts
+      upcoming words before synthesising their sound — giving natural prosody without
+      waiting for the full sentence. Switching the delay direction gives an ASR model instead.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">16-step delay</span>
+      <span class="arch-stat">streaming</span>
+      <span class="arch-stat">bidirectional flip</span>
+    </div>
+  </div>
+
+  <div class="arch-card blue">
+    <div class="arch-name">PAD TOKEN SYSTEM</div>
+    <div class="arch-body">
+      Special <code>pad</code> tokens inserted between word tokens to control speaking rate and
+      prosody. More consecutive pad tokens = longer pause or slower articulation.
+      This gives fine-grained timing control without explicit duration annotations,
+      allowing natural pauses between words and emphasis patterns to emerge from training.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">implicit timing</span>
+      <span class="arch-stat">no forced align</span>
+      <span class="arch-stat">word timestamps</span>
+    </div>
+  </div>
+
+  <div class="arch-card amber full">
+    <div class="arch-name">VOICE CONDITIONING — ZERO-SHOT CLONING</div>
+    <div class="arch-body">
+      A voice embedding is extracted from a reference audio clip (as short as 10 seconds)
+      using a speaker encoder. This embedding is prepended to the input sequence to condition
+      the model on the desired speaker's timbre, rhythm, and prosody.
+      For Moshi's 20K-hour synthetic dataset: <strong style="color:var(--amber2)">Moshi's stream</strong>
+      always received the same single voice actor's embedding (70+ speaking styles recorded as reference clips).
+      <strong style="color:var(--amber2)">User's stream</strong> received a randomly sampled voice embedding for each conversation,
+      giving diversity across the training corpus.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">10-sec reference</span>
+      <span class="arch-stat">zero-shot</span>
+      <span class="arch-stat">70+ styles (Moshi)</span>
+      <span class="arch-stat">random voices (user)</span>
+      <span class="arch-stat">Wespeaker encoder</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── DSM DIAGRAM ── -->
+<div class="dsm-diagram">
+  <div style="font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px">DSM Token Stream Layout — How text precedes audio at inference time</div>
+  <div class="dsm-row">
+    <div class="dsm-label">Text stream →</div>
+    <div class="dsm-tokens">
+      <span class="tok tok-text">My</span>
+      <span class="tok tok-text">name</span>
+      <span class="tok tok-text">is</span>
+      <span class="tok tok-text">Mo-</span>
+      <span class="tok tok-text">shi</span>
+      <span class="tok tok-text">and</span>
+      <span class="tok tok-text">I</span>
+      <span class="tok tok-text">was</span>
+      <span class="tok tok-text">built</span>
+      <span class="tok tok-text">by</span>
+      <span class="tok tok-text">Kyu-</span>
+      <span class="tok tok-text">tai</span>
+    </div>
+    <div class="dsm-delay">↑ runs ahead</div>
+  </div>
+  <div class="dsm-row">
+    <div class="dsm-label">Audio stream →</div>
+    <div class="dsm-tokens">
+      <span class="tok tok-pad">pad</span>
+      <span class="tok tok-pad">pad</span>
+      <span class="tok tok-pad">pad</span>
+      <span class="tok tok-audio">[mʌɪ]</span>
+      <span class="tok tok-audio">[neɪm]</span>
+      <span class="tok tok-audio">[ɪz]</span>
+      <span class="tok tok-audio">[moʊ]</span>
+      <span class="tok tok-audio">[ʃi]</span>
+      <span class="tok tok-audio">[ænd]</span>
+      <span class="tok tok-audio">[aɪ]</span>
+      <span class="tok tok-audio">[wɒz]</span>
+      <span class="tok tok-audio">[bɪlt]</span>
+    </div>
+    <div class="dsm-delay" style="background:var(--amber-dim);color:var(--text3)">↓ lags 1.28s</div>
+  </div>
+  <div style="font-size:10px;color:var(--text3);margin-top:12px;line-height:1.6">
+    Pad tokens fill the initial delay window. Audio generation starts 220ms after first text token arrives.
+    Traditional TTS would wait for the full sentence — DSM starts in under a quarter second.
+  </div>
+</div>
+
+<!-- ── SECTION 3: TRAINING PHASES ── -->
+<div class="section-heading">
+  <span class="section-num">03</span>
+  <span class="section-title">Training Phases — Step by Step</span>
+</div>
+
+<div class="timeline">
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-box">
+      <div class="phase-header open" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 1</span>
+        <span class="phase-title">Pre-training — Learning Speech from 2.5M Hours</span>
+        <span class="phase-badge badge-amber">Largest stage</span>
+        <span class="phase-chevron open">▶</span>
+      </div>
+      <div class="phase-body open">
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Dataset</div>
+            <div class="cell-val"><strong>2.5 million hours</strong> of publicly available audio (English + French)</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Transcripts</div>
+            <div class="cell-val">Synthetic — auto-generated by <strong>whisper-timestamped</strong> with Whisper-medium</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Compute</div>
+            <div class="cell-val"><strong>32 × H100 Nvidia GPUs</strong><br>750,000 updates, batch size 64</div>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Audio segment length</div>
+            <div class="cell-val">150-second extracts (random crops from longer recordings)</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Optimiser</div>
+            <div class="cell-val">AdamW with cosine LR schedule and linear warmup</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Objective</div>
+            <div class="cell-val">Next-token prediction on interleaved text + Mimi audio token streams</div>
+          </div>
+        </div>
+        <div class="phase-desc">
+          The model is trained on a massive pool of English and French speech — podcasts, audiobooks, 
+          radio, lectures, news. Because no ground-truth transcripts exist for this data, Kyutai ran 
+          <strong>Whisper-medium with whisper-timestamped</strong> on all 2.5M hours to generate 
+          word-level aligned pseudo-transcripts. The model learns the statistical relationship between 
+          text tokens and Mimi audio tokens at every position — essentially learning what spoken language 
+          sounds like at the token level. No speaker labels, no emotion labels, no style labels are needed 
+          at this stage. This stage is <strong>shared with Moshi's own pre-training</strong> — the TTS 
+          and the dialogue model train together before diverging.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-box">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 2</span>
+        <span class="phase-title">Fine-tuning — Real Conversational Speech (170 Hours)</span>
+        <span class="phase-badge badge-teal">Quality anchor</span>
+        <span class="phase-chevron">▶</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Dataset</div>
+            <div class="cell-val"><strong>170 hours</strong> of natural + scripted conversations, recorded by Kyutai</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Format</div>
+            <div class="cell-val">Stereo WAV — <strong>separate channel per speaker</strong>. Ground-truth transcripts with timestamps.</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Speakers</div>
+            <div class="cell-val">Multiple participant pairs. Diverse speaking styles, natural overlaps, backchannels.</div>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Text delay</div>
+            <div class="cell-val">2-second offset between audio and text streams (vs. 1.28s at inference)</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Why 2 seconds?</div>
+            <div class="cell-val">Lookahead at fine-tune time exceeds inference delay — ensures model learns full sentence prosody</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Key outcome</div>
+            <div class="cell-val">TTS learns to generate <strong>two simultaneous speakers</strong> with natural dialogue timing</div>
+          </div>
+        </div>
+        <div class="phase-desc">
+          This is the stage that transforms a single-speaker TTS into a <strong>multi-stream streaming TTS</strong> 
+          capable of generating both sides of a conversation simultaneously. The 170-hour Kyutai-collected dataset 
+          is the only real human conversation data the TTS ever sees directly. It teaches the model how two speakers 
+          interact acoustically — how Moshi's voice and the user's voice can coexist in the same stereo file with 
+          natural timing, pauses, and turn-taking dynamics. Critically, <strong>Moshi itself is never trained on 
+          this 170-hour dataset</strong> — it is used exclusively to train this TTS model, which then generates 
+          the synthetic data that trains Moshi.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-box">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 3</span>
+        <span class="phase-title">CFG Distillation — Improving Voice Conditioning Quality</span>
+        <span class="phase-badge badge-purple">Post-training</span>
+        <span class="phase-chevron">▶</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Technique</div>
+            <div class="cell-val"><strong>Classifier-Free Guidance (CFG) distillation</strong></div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Compute</div>
+            <div class="cell-val"><strong>8 × H100 GPUs</strong></div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Purpose</div>
+            <div class="cell-val">Improve speaker similarity between reference voice and generated speech</div>
+          </div>
+        </div>
+        <div class="phase-desc">
+          CFG distillation trains the model to more strongly condition its output on the provided voice 
+          embedding. Without this stage, the model sometimes drifts away from the reference voice during 
+          long generation. Distillation compresses the guidance signal directly into the model weights, 
+          improving voice consistency without increasing inference cost. This stage was done on only 8 GPUs 
+          — much cheaper than pre-training — and produced the final speaker similarity score of 77%+.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-box">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <span class="phase-num">Phase 4</span>
+        <span class="phase-title">Synthesis Operation — Generating the 20,000+ Hour Dataset</span>
+        <span class="phase-badge badge-green">Production use</span>
+        <span class="phase-chevron">▶</span>
+      </div>
+      <div class="phase-body">
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Script source</div>
+            <div class="cell-val">Helium LLM (fine-tuned on Open Hermes + real conversation transcripts)</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Output volume</div>
+            <div class="cell-val"><strong>20,000+ hours</strong> of stereo synthetic dialogue audio</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Conversations</div>
+            <div class="cell-val">~300,000 individual dialogue files at 3–5 minutes each</div>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Moshi voice</div>
+            <div class="cell-val"><strong>Fixed</strong> — single actor, 70+ styles listed in Table 19 of Moshi paper</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">User voice</div>
+            <div class="cell-val"><strong>Random</strong> — different voice embedding per conversation</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Augmentation</div>
+            <div class="cell-val">Noise, echo, reverb applied to user stream only — Moshi stream stays clean</div>
+          </div>
+        </div>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <div class="cell-label">Content types</div>
+            <div class="cell-val">General knowledge, self-knowledge (Moshi/Kyutai), voice style instructions, misspellings, math, safety</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Output format</div>
+            <div class="cell-val">Stereo WAV 24kHz + JSON transcript with word-level timestamps</div>
+          </div>
+          <div class="phase-cell">
+            <div class="cell-label">Channel layout</div>
+            <div class="cell-val">Left = Moshi (agent). Right = User. Same format moshi-finetune expects.</div>
+          </div>
+        </div>
+        <div class="phase-desc">
+          This is the TTS model's primary purpose — acting as a factory. 
+          Helium generates text dialogue scripts; the TTS renders both sides as audio simultaneously. 
+          <strong>The left channel always uses the voice actor's embedding</strong>, ensuring Moshi learns 
+          a single consistent voice identity. <strong>The right channel uses a random voice</strong> each time, 
+          making Moshi robust to diverse user accents and microphone conditions. Running 100+ parallel 
+          synthesis jobs on GPUs, this factory produces the entire 20,000-hour dataset in a matter of days — 
+          the same volume would take hundreds of years of human recording.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end timeline -->
+
+<!-- ── SECTION 4: DATASETS ── -->
+<div class="section-heading">
+  <span class="section-num">04</span>
+  <span class="section-title">Datasets Used — Complete Summary</span>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px">
+  <table class="dataset-table">
+    <thead>
+      <tr>
+        <th>Dataset</th>
+        <th>Volume</th>
+        <th>Type</th>
+        <th>Used for</th>
+        <th>Transcripts</th>
+        <th>Public?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Publicly available audio (EN+FR)</td>
+        <td><span style="color:var(--amber2);font-weight:500">2.5M hours</span></td>
+        <td><span class="tag" style="background:var(--amber-dim);color:var(--amber2)">Real speech</span></td>
+        <td>Phase 1 pre-training — learning acoustic language model</td>
+        <td>Synthetic (Whisper-medium)</td>
+        <td><span class="tag" style="background:var(--green-dim);color:var(--green)">Yes</span></td>
+      </tr>
+      <tr>
+        <td>Kyutai supervised multi-stream</td>
+        <td><span style="color:var(--teal);font-weight:500">170 hours</span></td>
+        <td><span class="tag" style="background:var(--teal-dim);color:var(--teal)">Real dialogue</span></td>
+        <td>Phase 2 fine-tune — two-speaker streaming TTS</td>
+        <td>Human-annotated with timestamps</td>
+        <td><span class="tag" style="background:var(--red-dim);color:var(--red)">No</span></td>
+      </tr>
+      <tr>
+        <td>Voice actor reference recordings</td>
+        <td><span style="color:var(--purple);font-weight:500">~20 hrs</span></td>
+        <td><span class="tag" style="background:var(--purple-dim);color:var(--purple)">Voice embed</span></td>
+        <td>Moshi's consistent voice identity during synthesis</td>
+        <td>Not required</td>
+        <td><span class="tag" style="background:var(--red-dim);color:var(--red)">No</span></td>
+      </tr>
+      <tr>
+        <td>Helium-generated dialogue scripts</td>
+        <td><span style="color:var(--blue);font-weight:500">~300K convos</span></td>
+        <td><span class="tag" style="background:var(--blue-dim);color:var(--blue)">Text (LLM)</span></td>
+        <td>Input to Phase 4 synthesis — TTS converts to audio</td>
+        <td>N/A (text input)</td>
+        <td><span class="tag" style="background:var(--red-dim);color:var(--red)">No</span></td>
+      </tr>
+      <tr>
+        <td>TTS-generated synthetic audio</td>
+        <td><span style="color:var(--green);font-weight:500">20,000+ hours</span></td>
+        <td><span class="tag" style="background:var(--green-dim);color:var(--green)">Synthetic</span></td>
+        <td>Moshi instruct fine-tuning (Stage 4) — teaches Moshi to be an assistant</td>
+        <td>Auto word-timestamps from synthesis</td>
+        <td><span class="tag" style="background:var(--red-dim);color:var(--red)">No</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── SECTION 5: COMPUTE ── -->
+<div class="section-heading">
+  <span class="section-num">05</span>
+  <span class="section-title">Compute Resources & Training Time</span>
+</div>
+
+<div class="resource-list">
+  <div class="res-row">
+    <div class="res-label">Phase 1 — Pre-training (TTS)</div>
+    <div class="res-bar-wrap">
+      <div class="res-bar" style="width:90%;background:linear-gradient(90deg,var(--amber),rgba(240,160,32,0.4))">
+        <span class="res-val">32 × H100 · 750K updates · batch 64</span>
+      </div>
+    </div>
+    <div class="res-note">Largest stage</div>
+  </div>
+  <div class="res-row">
+    <div class="res-label">Phase 2 — Fine-tune (170h dialogue)</div>
+    <div class="res-bar-wrap">
+      <div class="res-bar" style="width:35%;background:linear-gradient(90deg,var(--teal),rgba(46,196,182,0.4))">
+        <span class="res-val">Not explicitly stated</span>
+      </div>
+    </div>
+    <div class="res-note">Subset of Phase 1</div>
+  </div>
+  <div class="res-row">
+    <div class="res-label">Phase 3 — CFG Distillation</div>
+    <div class="res-bar-wrap">
+      <div class="res-bar" style="width:22%;background:linear-gradient(90deg,var(--purple),rgba(155,114,207,0.4))">
+        <span class="res-val">8 × H100 GPUs</span>
+      </div>
+    </div>
+    <div class="res-note">Cheapest stage</div>
+  </div>
+  <div class="res-row">
+    <div class="res-label">Phase 4 — Synthesis (20K hrs)</div>
+    <div class="res-bar-wrap">
+      <div class="res-bar" style="width:60%;background:linear-gradient(90deg,var(--green),rgba(86,184,112,0.4))">
+        <span class="res-val">100+ parallel GPU jobs · days of wall-clock time</span>
+      </div>
+    </div>
+    <div class="res-note">Parallel factory</div>
+  </div>
+  <div class="res-row">
+    <div class="res-label">Moshi full training (reference)</div>
+    <div class="res-bar-wrap">
+      <div class="res-bar" style="width:100%;background:linear-gradient(90deg,rgba(224,92,92,0.8),rgba(224,92,92,0.2))">
+        <span class="res-val">1,016 × H100 · 127 DGX nodes (Scaleway Nabu2023)</span>
+      </div>
+    </div>
+    <div class="res-note">Full system</div>
+  </div>
+</div>
+
+<div class="callout callout-amber">
+  <strong class="amber">Key context:</strong> The TTS pre-training at 32 H100s is roughly 32× cheaper than Moshi's 
+  full training at 1,016 H100s. This asymmetry is intentional — the TTS only needs to learn the acoustic mapping 
+  from text tokens to Mimi tokens, which is a much narrower task than Moshi's full dialogue understanding and generation.
+</div>
+
+<!-- ── SECTION 6: COMPARISON ── -->
+<div class="section-heading">
+  <span class="section-num">06</span>
+  <span class="section-title">Moshi TTS vs. Commercial Alternatives</span>
+</div>
+
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Kyutai TTS (internal/1.6B)</th>
+        <th>Google Cloud TTS</th>
+        <th>Azure Neural TTS</th>
+        <th>ElevenLabs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Two simultaneous speakers</td>
+        <td class="win">✓ Native dual-stream</td>
+        <td class="low">✗ Single speaker only</td>
+        <td class="low">✗ Single speaker only</td>
+        <td class="low">✗ Single speaker only</td>
+      </tr>
+      <tr>
+        <td>Streaming (starts mid-sentence)</td>
+        <td class="win">✓ 220ms latency</td>
+        <td class="mid">Partial</td>
+        <td class="mid">Partial</td>
+        <td class="mid">Partial</td>
+      </tr>
+      <tr>
+        <td>Uses Mimi codec</td>
+        <td class="win">✓ Token-compatible with Moshi</td>
+        <td class="low">✗ Different format</td>
+        <td class="low">✗ Different format</td>
+        <td class="low">✗ Different format</td>
+      </tr>
+      <tr>
+        <td>Word-level timestamps</td>
+        <td class="win">✓ Exact, from synthesis</td>
+        <td class="win">✓ Available</td>
+        <td class="win">✓ Available</td>
+        <td class="mid">Limited</td>
+      </tr>
+      <tr>
+        <td>Zero-shot voice cloning</td>
+        <td class="win">✓ 10-second clip</td>
+        <td class="low">✗</td>
+        <td class="mid">Limited</td>
+        <td class="win">✓</td>
+      </tr>
+      <tr>
+        <td>Conversational timing / overlaps</td>
+        <td class="win">✓ Trained on real dialogue</td>
+        <td class="low">✗</td>
+        <td class="low">✗</td>
+        <td class="low">✗</td>
+      </tr>
+      <tr>
+        <td>Open source</td>
+        <td class="win">✓ CC-BY 4.0</td>
+        <td class="low">✗ Proprietary API</td>
+        <td class="low">✗ Proprietary API</td>
+        <td class="low">✗ Proprietary API</td>
+      </tr>
+      <tr>
+        <td>Training data cost per year</td>
+        <td class="win">Free (pre-built model)</td>
+        <td class="low">Per-character API billing</td>
+        <td class="low">Per-character API billing</td>
+        <td class="low">Per-character API billing</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="callout callout-teal">
+  <strong class="teal">Why no commercial TTS could have been used for Moshi:</strong>
+  All commercial TTS systems generate one speaker at a time and produce WAV files in their own proprietary formats.
+  Moshi's training pipeline requires stereo Mimi-encoded token sequences — both speakers simultaneously, 
+  in the exact codec format Moshi reads. Only a custom-built TTS using Mimi as its native codec could produce 
+  training data directly compatible with Moshi's architecture.
+</div>
+
+<!-- ── SECTION 7: RELEASED MODEL ── -->
+<div class="section-heading">
+  <span class="section-num">07</span>
+  <span class="section-title">The Public Release — Kyutai TTS 1.6B (July 2025)</span>
+</div>
+
+<div class="arch-grid">
+  <div class="arch-card green">
+    <div class="arch-name">RELEASED MODEL SPECS</div>
+    <div class="arch-body">
+      The internal Moshi TTS tool evolved and was open-sourced as <strong style="color:var(--green)">kyutai/tts-1.6b-en_fr</strong>.
+      Supports English and French. Available on HuggingFace under CC-BY 4.0.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">1.6B params</span>
+      <span class="arch-stat">EN + FR</span>
+      <span class="arch-stat">CC-BY 4.0</span>
+    </div>
+  </div>
+  <div class="arch-card blue">
+    <div class="arch-name">POCKET TTS (JAN 2026)</div>
+    <div class="arch-body">
+      Smaller descendant: <strong style="color:var(--blue)">100M parameters</strong>. Runs in real-time on CPU only.
+      Same DSM architecture, same Mimi codec, same voice cloning capability — 16× smaller model.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">100M params</span>
+      <span class="arch-stat">CPU real-time</span>
+      <span class="arch-stat">Jan 2026</span>
+    </div>
+  </div>
+  <div class="arch-card purple">
+    <div class="arch-name">PERFORMANCE BENCHMARKS</div>
+    <div class="arch-body">
+      Word Error Rate: <strong style="color:var(--purple)">2.82% (EN)</strong> · <strong style="color:var(--purple)">3.29% (FR)</strong>.
+      Speaker similarity: <strong style="color:var(--purple)">77%+</strong>.
+      End-to-end latency: <strong style="color:var(--purple)">220ms</strong>.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">SOTA streaming</span>
+      <span class="arch-stat">offline-competitive</span>
+    </div>
+  </div>
+  <div class="arch-card amber">
+    <div class="arch-name">UNMUTE — PRODUCTION DEPLOYMENT</div>
+    <div class="arch-body">
+      Kyutai's live voice AI product "Unmute" runs on Kyutai TTS 1.6B + Kyutai STT in production,
+      serving <strong style="color:var(--amber2)">64 simultaneous WebSocket connections per L40S GPU</strong> via the Rust backend.
+    </div>
+    <div style="margin-top:10px">
+      <span class="arch-stat">64 concurrent users</span>
+      <span class="arch-stat">Rust backend</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTNOTE -->
+<div class="footnote">
+  <strong>Sources:</strong>
+  Défossez et al. (2024) — "Moshi: a speech-text foundation model for real-time dialogue"
+  <a href="https://arxiv.org/abs/2410.00037">arXiv:2410.00037</a> · 
+  Zeghidour et al. (2025) — "Streaming Sequence-to-Sequence Learning with Delayed Streams Modeling"
+  <a href="https://arxiv.org/abs/2509.08753">arXiv:2509.08753</a> ·
+  <a href="https://huggingface.co/kyutai/tts-1.6b-en_fr">kyutai/tts-1.6b-en_fr on HuggingFace</a> ·
+  <a href="https://kyutai.org/tts">kyutai.org/tts</a>
+  <br><br>
+  <em>Note:</em> The exact parameter count, training step count, and learning rate for the internal Moshi TTS 
+  (used to generate the 20K hours in 2024) are not published in the Moshi paper (Appendix C details were minimal). 
+  The 1.6B size, 2.5M-hour dataset, and 32 H100 compute figures are from the released Kyutai TTS 1.6B model card 
+  (July 2025), which Kyutai confirmed is the evolved open-source version of the same internal TTS tool.
+</div>
+
+</div><!-- end main -->
+
+<script>
+function togglePhase(header) {
+  const chevron = header.querySelector('.phase-chevron');
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// Animate resource bars on load
+window.addEventListener('load', () => {
+  const bars = document.querySelectorAll('.res-bar');
+  bars.forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0';
+    setTimeout(() => { bar.style.width = w; }, 200);
+  });
+});
+</script>
+
+</body>
+</html>

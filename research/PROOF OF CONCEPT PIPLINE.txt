@@ -1,0 +1,37 @@
+
+PROOF OF CONCEPT PIPLINE AND SUMMMARY :
+
+Step 1 — Deploy Qwen3-Omni.
+
+Download the Qwen3-Omni weights from HuggingFace (Apache 2.0, free). The model needs approximately 60–80GB VRAM in bf16 — one or two A100 80GB GPUs. run it using the official inference script from the Qwen3-Omni GitHub repository. No training, no fine-tuning, nothing custom — just loading the pre-trained weights and running inference.
+At this point we already have: a model that understands Urdu speech input natively. You can speak Urdu into a microphone and the Thinker component processes it and generates a Urdu text response. The understanding side is done out of the box.
+
+Step 2 — Verify Urdu speech understanding.
+
+have to run a simple test. have to Record speaking 20–30 different Urdu sentences — mix of formal Urdu, code-switched sentences (Urdu-English), different topics. Feed them through Qwen3-Omni's audio encoder. Check the text responses it generates. This confirms the model understands Pakistani Urdu correctly, handles code-switching, and produces sensible Urdu text responses. If this works cleanly your understanding layer is confirmed.
+
+Step 3 — Build the pipeline bridge to Azure TTS.
+
+Qwen3-Omni's Talker component does not support Urdu speech output — only 10 languages, Urdu is not among them. So we need to route the text output to Azure TTS to produce the spoken response.
+
+
+VISUALLY : the expected flow of proof of concept phase 
+
+Microphone input (Urdu audio)
+        ↓
+Qwen3-Omni audio encoder + Thinker  ( this part is imp for us to make sure that it is proccessing urdu and understands it correctly ) 
+        ↓
+Urdu text response (string)
+        ↓
+Azure TTS API call (AsadNeural, ur-PK)
+        ↓
+WAV audio returned
+        ↓
+Speaker output
+
+
+after this, we will get a proof of concept that the urdu conversation can be done, it is obv not a full duplex. it is a way where the voice is given, the qwen3 encoder and thinker process it , understands it and then answers it in text. Then we convert that urdu text to voice through azure TTS. It is a conventional pipeline, this is exactly for what moshi was built to solve. If we suceed in this and have good results then we will use moshi's architecture and implement the whole thing for urdu which will include the synthetic urdu data generation and real voice recordings on seprate channels etc.
+
+
+
+

@@ -1,0 +1,537 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:.5rem 0}
+.tabs{display:flex;gap:0;border:.5px solid var(--color-border-tertiary);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.tab{flex:1;padding:9px 5px;text-align:center;font-size:11px;font-weight:500;cursor:pointer;color:var(--color-text-secondary);border-right:.5px solid var(--color-border-tertiary);transition:background .15s,color .15s;line-height:1.3}
+.tab:last-child{border-right:none}
+.tab.active{background:var(--color-background-info);color:var(--color-text-info)}
+.panel{display:none}.panel.show{display:block}
+.card{border:.5px solid var(--color-border-tertiary);border-radius:10px;overflow:hidden;margin-bottom:.85rem}
+.card-h{padding:9px 14px;background:var(--color-background-secondary);border-bottom:.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:8px}
+.card-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.card-sub{font-size:11px;color:var(--color-text-secondary);margin-left:2px}
+.card-b{padding:13px 14px}
+.lbl{font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:5px;margin-top:10px}
+.lbl:first-child{margin-top:0}
+.desc{font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-bottom:8px}
+.ins{font-size:12px;line-height:1.6;padding:8px 12px;border-left:3px solid;border-radius:0 6px 6px 0;margin:6px 0}
+.ins-blue{border-color:var(--color-border-info);background:var(--color-background-info);color:var(--color-text-primary)}
+.ins-green{border-color:var(--color-border-success);background:var(--color-background-success);color:var(--color-text-primary)}
+.ins-amber{border-color:var(--color-border-warning);background:var(--color-background-warning);color:var(--color-text-primary)}
+.ins-red{border-color:var(--color-border-danger);background:var(--color-background-danger);color:var(--color-text-primary)}
+.ins-purple{border-color:#AFA9EC;background:#EEEDFE;color:#26215C}
+.divider{border-top:.5px dashed var(--color-border-tertiary);margin:11px 0}
+.code{font-family:var(--font-mono);font-size:11px;background:var(--color-background-tertiary);padding:9px 13px;border-radius:7px;color:var(--color-text-primary);margin:6px 0;line-height:1.8;white-space:pre-wrap}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.comp{border-radius:8px;padding:10px 12px;border:.5px solid;border-left-width:3px}
+.comp-name{font-size:12px;font-weight:500;margin-bottom:4px}
+.comp-body{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;white-space:nowrap;margin:1px}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}
+.tbl th{padding:7px 10px;text-align:left;font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--color-text-tertiary);background:var(--color-background-secondary);border:.5px solid var(--color-border-tertiary)}
+.tbl td{padding:8px 10px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-primary);line-height:1.5;vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--color-background-secondary)}
+.step-num{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;margin-right:6px}
+.step-row{display:flex;align-items:flex-start;gap:0;margin-bottom:10px}
+.step-content{flex:1}
+.good{color:var(--color-text-success);font-weight:500}
+.bad{color:var(--color-text-danger);font-weight:500}
+.warn{color:var(--color-text-warning);font-weight:500}
+</style>
+
+<div class="wrap">
+<div class="tabs">
+  <div class="tab active" onclick="show(0)">Repo analysis</div>
+  <div class="tab" onclick="show(1)">What gets trained</div>
+  <div class="tab" onclick="show(2)">Urdu challenges</div>
+  <div class="tab" onclick="show(3)">Dataset needs</div>
+  <div class="tab" onclick="show(4)">Step-by-step plan</div>
+  <div class="tab" onclick="show(5)">Compute & config</div>
+</div>
+
+<!-- ===== PANEL 0: REPO ANALYSIS ===== -->
+<div class="panel show" id="p0">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:var(--color-background-info);color:var(--color-text-info)">!</div>
+  <div><div class="card-title">What the moshi-finetune repo actually does</div>
+  <div class="card-sub">The honest answer before anything else</div></div>
+</div>
+<div class="card-b">
+<div class="ins ins-red"><strong>Critical fact from Kyutai's own FAQ:</strong> "Moshi only speaks English. This would require fine-tuning, which is not currently supported." — The official repo is designed for English personality/domain adaptation, NOT language switching. Using it for Urdu requires extra steps not covered by the official README.</div>
+
+<div class="lbl">What the official repo does</div>
+<div class="desc">The repo fine-tunes only <strong>Helium</strong> — the 7B language model brain. Mimi (the codec) is never touched. It provides two modes: LoRA adaptation (train only small adapter matrices, ~1% of parameters) and full fine-tuning (train all 7B parameters). The training data format is stereo WAV files where left channel = Moshi speaking, right channel = user speaking.</div>
+
+<div class="comp-grid">
+  <div class="comp" style="border-color:#3B6D11;background:var(--color-background-success)">
+    <div class="comp-name" style="color:var(--color-text-success)">What it CAN do</div>
+    <div class="comp-body">
+      — Change Moshi's personality/tone in English<br>
+      — Fine-tune on a specific domain (medical, customer service)<br>
+      — Adapt to a specific speaker's conversational style<br>
+      — Works on 1 H100 GPU in LoRA mode<br>
+      — Full pipeline: stereo audio → auto-transcription → training
+    </div>
+  </div>
+  <div class="comp" style="border-color:#A32D2D;background:var(--color-background-danger)">
+    <div class="comp-name" style="color:var(--color-text-danger)">What it CANNOT do out of the box</div>
+    <div class="comp-body">
+      — Teach Moshi to speak Urdu natively<br>
+      — Handle Urdu Nastaliq script in inner monologue<br>
+      — Fix Mimi's limited Urdu phoneme knowledge<br>
+      — Change the text tokenizer (Helium uses English SentencePiece)<br>
+      — Change the codec's language-specific quality
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="lbl">The two repos you should know about</div>
+<table class="tbl">
+<thead><tr><th>Repo</th><th>What it adds</th><th>Use for Urdu?</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>kyutai-labs/moshi-finetune</strong><br><span style="font-size:10px;color:var(--color-text-tertiary)">Official</span></td>
+  <td>LoRA + full fine-tune on Helium. English-only tooling. Auto-transcription via Whisper. DailyTalk sample dataset.</td>
+  <td><span class="bad">Partial</span> — works for Urdu audio but inner monologue will be broken (wrong tokenizer)</td>
+</tr>
+<tr>
+  <td><strong>nu-dialogue/moshi-finetune</strong><br><span style="font-size:10px;color:var(--color-text-tertiary)">Community (Japanese Moshi team)</span></td>
+  <td>Supports custom text tokenizers. Built J-Moshi (Japanese). Allows changing vocabulary for non-English scripts. Has --no_whitespace_before_word flag for scripts without spaces.</td>
+  <td><span class="good">Better</span> — designed exactly for this: plug in an Urdu SentencePiece tokenizer and retrain text embeddings</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ===== PANEL 1: WHAT GETS TRAINED ===== -->
+<div class="panel" id="p1">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:#EEEDFE;color:#3C3489">2</div>
+  <div><div class="card-title">Exactly which components get updated — and which stay frozen</div></div>
+</div>
+<div class="card-b">
+
+<div class="lbl">Component breakdown during fine-tuning</div>
+<table class="tbl">
+<thead><tr><th>Component</th><th>Fine-tuned?</th><th>Why</th><th>Impact on Urdu</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Mimi encoder</strong><br><span style="font-size:10px">CNN + RVQ quantizer</span></td>
+  <td><span class="bad">Never. Always frozen.</span></td>
+  <td>Codec must stay stable — changing it would break all token IDs Helium learned</td>
+  <td>Mimi can physically encode Urdu audio (it's a signal-level codec). But its semantic codebook-1 tokens were distilled from WavLM on English — they may not carry strong Urdu phoneme meaning.</td>
+</tr>
+<tr>
+  <td><strong>Mimi decoder</strong><br><span style="font-size:10px">CNN waveform generator</span></td>
+  <td><span class="bad">Never. Always frozen.</span></td>
+  <td>Same reason — codec stays fixed</td>
+  <td>Mimi's decoder can reconstruct Urdu audio since it's waveform-level. Quality will be acceptable but not optimized for Urdu phonemes like ص, ض, ط, ظ.</td>
+</tr>
+<tr>
+  <td><strong>Helium LLM</strong><br><span style="font-size:10px">7B transformer, all layers</span></td>
+  <td><span class="good">YES — this is the entire point</span></td>
+  <td>LoRA adapters trained on all linear layers, OR full fine-tune of all 7B params</td>
+  <td>This is where Urdu language behavior is learned. Helium must learn: Urdu word sequences, Urdu grammar, Urdu conversational patterns from the dialogue data.</td>
+</tr>
+<tr>
+  <td><strong>Text tokenizer vocabulary</strong><br><span style="font-size:10px">SentencePiece model</span></td>
+  <td><span class="warn">NOT in official repo</span><br><span class="good">YES in nu-dialogue fork</span></td>
+  <td>Official repo assumes English tokenizer. nu-dialogue fork lets you swap in any SentencePiece model.</td>
+  <td><strong>This is the most critical piece for Urdu.</strong> Without an Urdu-capable tokenizer, inner monologue text tokens will be garbage — the model cannot think in Urdu.</td>
+</tr>
+<tr>
+  <td><strong>Text embedding table</strong><br><span style="font-size:10px">maps token IDs → vectors</span></td>
+  <td><span class="warn">Optional (lora.ft_embed)</span></td>
+  <td>If you change the tokenizer, you must reinitialize the embedding table for new token IDs</td>
+  <td>Required for Urdu Nastaliq script. The nu-dialogue fork has an --init_text_embeddings flag exactly for this.</td>
+</tr>
+<tr>
+  <td><strong>Depth Transformer</strong><br><span style="font-size:10px">small model for inter-codebook prediction</span></td>
+  <td><span class="good">Yes, trained with Helium</span></td>
+  <td>Predicts codebooks 2–8 given codebook 1. Trained jointly.</td>
+  <td>Learns Urdu acoustic patterns across codebook layers from training audio.</td>
+</tr>
+</tbody>
+</table>
+
+<div class="ins ins-amber">The biggest misconception: people think fine-tuning Moshi means "teaching it a new voice." It doesn't. Fine-tuning teaches Helium new conversational patterns and language content. The voice quality (Mimi) stays the same. For Urdu, you are teaching the brain to think and respond in Urdu — the ear and mouth (Mimi) stay as is.</div>
+
+</div>
+</div>
+</div>
+
+<!-- ===== PANEL 2: URDU CHALLENGES ===== -->
+<div class="panel" id="p2">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:var(--color-background-danger);color:var(--color-text-danger)">!</div>
+  <div><div class="card-title">The 4 specific challenges for Urdu — and how solvable each one is</div></div>
+</div>
+<div class="card-b">
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-danger);color:var(--color-text-danger)">1</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Wrong text tokenizer — Helium uses English SentencePiece</div>
+    <div class="desc">Helium's tokenizer was built on French/English text. Urdu uses Nastaliq Arabic script (right-to-left). The tokenizer has almost no Urdu coverage — Urdu text will be tokenized as unknown characters or split into meaningless byte fragments. This means the Inner Monologue (Helium's thinking layer) cannot reason in Urdu.</div>
+    <div class="ins ins-red"><strong>Solvability: Moderate.</strong> The nu-dialogue fork solves this — you supply your own SentencePiece model trained on Urdu text and re-initialize the embedding table. Requires: an Urdu SentencePiece vocab (you can train one from Common Crawl Urdu text in ~30 minutes), and reinitializing the embedding layer before fine-tuning.</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-warning);color:var(--color-text-warning)">2</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Mimi's semantic tokens — distilled from English-dominant WavLM</div>
+    <div class="desc">Mimi's codebook-1 (semantic) tokens were distilled from WavLM, which was pre-trained primarily on English speech. Urdu phonemes like retroflex consonants (ٹ, ڈ, ڑ), aspirated stops (پھ, بھ), and the schwa vowel may not map to distinct cluster IDs. Different Urdu sounds could collapse to the same token.</div>
+    <div class="ins ins-amber"><strong>Solvability: Acceptable for now.</strong> Mimi is still a signal-level codec — it can encode and reconstruct Urdu audio acoustically even if semantic tokens are not perfect. Helium will learn to work with the available token vocabulary. The output will be intelligible Urdu but may lose some subtle phoneme distinctions. Full fix requires fine-tuning Mimi with an Urdu-capable SSL model, which is a separate research project.</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-warning);color:var(--color-text-warning)">3</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Limited Urdu dialogue data — Moshi needs stereo 2-speaker conversational audio</div>
+    <div class="desc">The official repo requires stereo WAV files with both speakers on separate channels — one entire conversation per file. Urdu has limited publicly available conversational dialogue datasets in this exact format. Most Urdu speech data is read-speech (people reading text), not natural dialogue.</div>
+    <div class="ins ins-amber"><strong>Solvability: Manageable with synthetic data.</strong> You can synthesize stereo dialogue from text Q&A pairs using a Urdu TTS system. Use any Urdu TTS (Google Cloud, Microsoft Azure, or open-source Urdu TTS) to generate both sides of the conversation, mix into stereo, and use that as training data.</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-success);color:var(--color-text-success)">4</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Helium has very limited Urdu world knowledge</div>
+    <div class="desc">Helium was pre-trained primarily on French and English text. Its knowledge of Urdu topics, vocabulary, grammar, and cultural context is minimal.</div>
+    <div class="ins ins-green"><strong>Solvability: Fine-tuning directly addresses this.</strong> Training Helium on Urdu conversational data teaches it Urdu language patterns. You can supplement with Urdu text-only training (just text tokens, no audio required) before the audio fine-tuning step — this is much cheaper.</div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- ===== PANEL 3: DATASET ===== -->
+<div class="panel" id="p3">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:var(--color-background-success);color:var(--color-text-success)">D</div>
+  <div><div class="card-title">Dataset requirements — exactly what you need and where to get it</div></div>
+</div>
+<div class="card-b">
+
+<div class="lbl">Format the repo requires (non-negotiable)</div>
+<div class="code">data/
+├── urdu_dialogues.jsonl            ← one line per audio file
+└── audio/
+    ├── conv_001.wav                ← stereo, 24kHz
+    ├── conv_001.json               ← word-level timestamps + transcript
+    ├── conv_002.wav
+    └── conv_002.json
+
+Each WAV file:
+  - Stereo (2 channels)
+  - Left channel (channel 0): Moshi's voice (the AI assistant speaking)
+  - Right channel (channel 1): User's voice (the person speaking)
+  - Sample rate: 24kHz (Mimi's rate)
+  - Duration: 10–120 seconds per file ideally
+  - Format: PCM WAV, 16-bit
+
+Each JSON file (auto-generated by annotate.py with Whisper):
+  {"words": [{"word": "آپ", "start": 0.12, "end": 0.45}, ...]}
+  For Urdu: you need a Urdu-capable ASR for timestamps.
+  Whisper supports Urdu — use: whisper --language ur</div>
+
+<div class="divider"></div>
+<div class="lbl">How much data do you need?</div>
+<table class="tbl">
+<thead><tr><th>Scenario</th><th>Hours needed</th><th>Expected quality</th><th>Compute</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Minimum viable (proof of concept)</strong></td>
+  <td>5–10 hours of Urdu dialogue</td>
+  <td>Broken but learns some Urdu patterns. Inner monologue mostly English-mixed.</td>
+  <td>1 H100, ~4 hours</td>
+</tr>
+<tr>
+  <td><strong>Functional (usable product)</strong></td>
+  <td>50–100 hours</td>
+  <td>Coherent Urdu responses, reasonable conversational flow, some mixing still.</td>
+  <td>1 H100, 1–2 days</td>
+</tr>
+<tr>
+  <td><strong>Production quality</strong></td>
+  <td>500–1,000 hours</td>
+  <td>Natural Urdu conversation with good turn-taking and factual accuracy.</td>
+  <td>4–8 H100s, 3–5 days</td>
+</tr>
+<tr>
+  <td><strong>Kyutai's own reference</strong></td>
+  <td>170h real + 20,000h synthetic</td>
+  <td>What Moshi (English) achieves</td>
+  <td>1,016 H100s</td>
+</tr>
+</tbody>
+</table>
+
+<div class="divider"></div>
+<div class="lbl">Available Urdu speech datasets</div>
+<table class="tbl">
+<thead><tr><th>Dataset</th><th>Type</th><th>Hours</th><th>Usable as-is?</th><th>Link</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Mozilla Common Voice Urdu</strong></td>
+  <td>Read speech (single speaker)</td>
+  <td>~30–50h</td>
+  <td>No — mono, not dialogue</td>
+  <td>commonvoice.mozilla.org</td>
+</tr>
+<tr>
+  <td><strong>OpenSLR Urdu (SLR79)</strong></td>
+  <td>Read speech, multi-speaker</td>
+  <td>~6h</td>
+  <td>No — mono, not dialogue</td>
+  <td>openslr.org/79</td>
+</tr>
+<tr>
+  <td><strong>IndicVoices-R (Urdu subset)</strong></td>
+  <td>Read speech</td>
+  <td>~20h</td>
+  <td>No — TTS training data only</td>
+  <td>huggingface.co/ai4bharat</td>
+</tr>
+<tr>
+  <td><strong>Synthetic generation (recommended)</strong></td>
+  <td>TTS-generated dialogue</td>
+  <td>Unlimited</td>
+  <td><span class="good">YES — best option</span></td>
+  <td>Build from Urdu text Q&A</td>
+</tr>
+<tr>
+  <td><strong>Self-recorded dialogues</strong></td>
+  <td>Natural conversation</td>
+  <td>Up to you</td>
+  <td><span class="good">YES — highest quality</span></td>
+  <td>Record with two microphones</td>
+</tr>
+</tbody>
+</table>
+
+<div class="ins ins-green"><strong>Practical recommendation:</strong> Generate 50–100 hours of synthetic Urdu dialogue using Google Cloud TTS or Azure TTS (both support Urdu neural voices). Write 5,000–10,000 Urdu Q&A pairs, synthesize both sides with different voices, mix into stereo WAV files. This is exactly what Kyutai did for their 20,000h synthetic dataset — they generated both speakers artificially.</div>
+
+</div>
+</div>
+</div>
+
+<!-- ===== PANEL 4: STEP-BY-STEP PLAN ===== -->
+<div class="panel" id="p4">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:#EEEDFE;color:#3C3489">→</div>
+  <div><div class="card-title">Complete step-by-step plan to build Urdu Moshi</div></div>
+</div>
+<div class="card-b">
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-info);color:var(--color-text-info)">1</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Use the nu-dialogue fork, not the official repo</div>
+    <div class="desc">The community fork (github.com/nu-dialogue/moshi-finetune) supports custom text tokenizers, which is essential for Urdu Nastaliq script. It was used to build J-Moshi (Japanese) using the exact same steps you need for Urdu.</div>
+    <div class="code">git clone https://github.com/nu-dialogue/moshi-finetune
+cd moshi-finetune && pip install -e .</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-info);color:var(--color-text-info)">2</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Train an Urdu SentencePiece tokenizer</div>
+    <div class="desc">Train a new tokenizer on Urdu text so the inner monologue can think in Urdu. Use the same vocabulary size as Helium's original tokenizer (check config.json — typically 32,000 or 48,000). Use Common Crawl Urdu, Wikipedia Urdu, and any Urdu text corpus.</div>
+    <div class="code">import sentencepiece as spm
+spm.SentencePieceTrainer.train(
+    input="urdu_corpus.txt",
+    model_prefix="urdu_spm",
+    vocab_size=32000,          # must match Helium's vocab size
+    character_coverage=0.9995, # high coverage for Urdu script
+    model_type="bpe",
+    pad_id=0, unk_id=1, bos_id=2, eos_id=3
+)</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-info);color:var(--color-text-info)">3</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Initialize the model for Urdu fine-tuning</div>
+    <div class="desc">Use the nu-dialogue init script to reinitialize text embeddings for the new tokenizer vocabulary, and add the user-stream prediction modules.</div>
+    <div class="code">python -m tools.init_moshi_for_ft \
+  --moshi_lm_repo kyutai/moshiko-pytorch-bf16 \
+  --save_dir init_models/moshiko-urdu \
+  --model_dtype bfloat16 \
+  --extend_modules_for_user_stream \
+  --init_text_embeddings \         ← reinitialize for Urdu tokenizer
+  --text_tokenizer_repo ./urdu_spm.model</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-info);color:var(--color-text-info)">4</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Prepare stereo Urdu dialogue dataset</div>
+    <div class="desc">Generate synthetic dialogues using Urdu TTS or record natural conversations. Mix to stereo: left = assistant voice, right = user voice. Transcribe with Whisper (language=ur) to get timestamps.</div>
+    <div class="code"># Synthesize stereo dialogue from text Q&A pairs
+# Left channel: TTS with "Urdu Female Voice A"
+# Right channel: TTS with "Urdu Male Voice B"
+
+# Then transcribe with Whisper for timestamps:
+whisper conv_001.wav --language ur --output_format json
+
+# Run annotate script for all files:
+python -m tools.tokenize_audio \
+  --audio_dir ./urdu_audio \
+  --output_dir ./urdu_tokens \
+  --text_tokenizer_repo ./urdu_spm.model \
+  --no_whitespace_before_word  # Urdu has no spaces between some words</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-info);color:var(--color-text-info)">5</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Run LoRA fine-tuning</div>
+    <div class="desc">Start with LoRA (rank 128) for speed. If results are poor after 2,000 steps, switch to full fine-tuning. Use a lower learning rate than default since you reinitialised embeddings.</div>
+    <div class="code">torchrun --nproc-per-node 1 -m train urdu_config.yaml
+
+# urdu_config.yaml key settings:
+# lora:
+#   enable: true
+#   rank: 128
+#   ft_embed: true     ← full fine-tune embeddings (new tokenizer needs this)
+# optim:
+#   lr: 1e-5           ← lower than default 2e-6 due to reinitialized embeddings
+# max_steps: 5000      ← more steps for language transfer
+# text_padding_weight: 0.05</div>
+  </div>
+</div>
+
+<div class="step-row">
+  <div class="step-num" style="background:var(--color-background-success);color:var(--color-text-success)">6</div>
+  <div class="step-content">
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Test and iterate</div>
+    <div class="desc">Run the Moshi web server with your fine-tuned weights. Test with Urdu speech input. Check if inner monologue produces Urdu text tokens. Iterate with more data if responses revert to English.</div>
+    <div class="code">python -m moshi.server \
+  --lora-weight=./checkpoints/lora.safetensors \
+  --config-path=./checkpoints/config.json</div>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- ===== PANEL 5: COMPUTE ===== -->
+<div class="panel" id="p5">
+
+<div class="card">
+<div class="card-h">
+  <div class="card-num" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">⚙</div>
+  <div><div class="card-title">Compute requirements and config settings for Urdu</div></div>
+</div>
+<div class="card-b">
+
+<div class="lbl">GPU requirements (from official repo benchmarks)</div>
+<table class="tbl">
+<thead><tr><th>Setup</th><th>Memory used</th><th>Tokens/sec</th><th>Time for 5,000 steps</th></tr></thead>
+<tbody>
+<tr><td>1× H100 80GB (LoRA)</td><td>39.6 GB</td><td>~12,000</td><td>~6–8 hours</td></tr>
+<tr><td>1× A100 80GB (LoRA)</td><td>~40 GB</td><td>~8,000</td><td>~10–12 hours</td></tr>
+<tr><td>1× RTX 4090 24GB</td><td>OOM on default</td><td>—</td><td>Reduce batch_size to 4, duration to 30s</td></tr>
+<tr><td>8× H100 (LoRA)</td><td>23.7 GB/GPU</td><td>~85,000</td><td>~1–2 hours</td></tr>
+</tbody>
+</table>
+
+<div class="divider"></div>
+<div class="lbl">Recommended config for Urdu LoRA fine-tuning</div>
+<div class="code">moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+
+run_dir: "./checkpoints/urdu_moshi"
+
+# Data
+data:
+  train_data: "./data/urdu_train.jsonl"
+  eval_data: "./data/urdu_eval.jsonl"
+  shuffle: true
+
+# Training duration
+duration_sec: 60          # 60 seconds per sample
+batch_size: 8             # reduce if OOM (default 16)
+max_steps: 5000           # more steps for language transfer
+
+# LoRA settings
+lora:
+  enable: true
+  rank: 128
+  scaling: 2.0
+  ft_embed: true          # IMPORTANT: full-finetune embeddings for new tokenizer
+
+# Loss weights
+first_codebook_weight_multiplier: 100  # semantic token is most important
+text_padding_weight: 0.05             # Urdu inner monologue padding
+
+# Optimizer
+optim:
+  lr: 1e-5               # lower LR because embeddings were reinitialized
+  weight_decay: 0.1
+  pct_start: 0.05        # short warmup
+
+# Memory optimization
+gradient_checkpointing: true  # if OOM
+
+# Logging
+log_freq: 50
+eval_freq: 500
+ckpt_freq: 500
+save_adapters: true
+
+# Wandb (optional)
+# wandb:
+#   key: "your-key"
+#   project: "urdu-moshi"</div>
+
+<div class="divider"></div>
+<div class="lbl">Realistic expectation timeline</div>
+<table class="tbl">
+<thead><tr><th>Week</th><th>What you do</th><th>Outcome</th></tr></thead>
+<tbody>
+<tr><td>Week 1</td><td>Generate 10h synthetic Urdu dialogue (TTS), train Urdu tokenizer, set up nu-dialogue fork</td><td>Environment ready, first training run</td></tr>
+<tr><td>Week 2</td><td>First LoRA training (5,000 steps), test on Urdu speech, identify failures</td><td>Rough Urdu responses — mostly functional but code-switching</td></tr>
+<tr><td>Week 3</td><td>Scale synthetic data to 50h, iterate training with better config</td><td>Coherent Urdu conversation, minimal English mixing</td></tr>
+<tr><td>Week 4+</td><td>Add real recorded dialogues, full fine-tune (not LoRA), scale to 100h+</td><td>Production-quality Urdu voice agent</td></tr>
+</tbody>
+</table>
+
+<div class="ins ins-purple"><strong>The single most impactful thing you can do:</strong> Generate high-quality synthetic Urdu dialogue data before fine-tuning. 50 hours of synthetic Urdu Q&A conversations (both speakers TTS-generated) will produce a far better result than 5 hours of real recorded audio, simply because of quantity. Kyutai used 20,000 hours of synthetic data — quality of real data matters, but quantity dominates at the early stages.</div>
+
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.panel').forEach((p,j)=>p.classList.toggle('show',j===i));
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+</script>

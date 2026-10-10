@@ -1,0 +1,675 @@
+<title>Towards Urdu Full-Duplex Spoken Dialogue</title>
+<style>
+  .doc {
+    color-scheme: light;
+    --page:         #FFFFFF;
+    --margin-bg:    #ECEAE4;
+    --ink:          #1A1A18;
+    --ink-soft:     #45453F;
+    --ink-faint:    #767669;
+    --rule:         #BBB9AC;
+    --rule-light:   #E2E0D5;
+    --accent:       #7A1F1F;
+    --table-head:   #F2F0E8;
+    --table-border: #CFCDBF;
+    --mono-bg:      #F4F3EC;
+    --mono-border:  #D6D4C6;
+    --series-text:  #c0392b;
+    --series-audio: #1f8a6f;
+    --chart-grid:   #D9D7C9;
+    --callout-bg:   #F6F3E9;
+    --callout-bd:   #C8A24A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .doc {
+      color-scheme: dark;
+      --page:         #17160F;
+      --margin-bg:    #0F0E0A;
+      --ink:          #E9E6D9;
+      --ink-soft:     #C2BFAE;
+      --ink-faint:    #8B8976;
+      --rule:         #3C3A2E;
+      --rule-light:   #2A2920;
+      --accent:       #E0A05C;
+      --table-head:   #201F16;
+      --table-border: #3C3A2E;
+      --mono-bg:      #121108;
+      --mono-border:  #332F1F;
+      --series-text:  #e0735c;
+      --series-audio: #4fc79a;
+      --chart-grid:   #2E2C22;
+      --callout-bg:   #231F13;
+      --callout-bd:   #8A6B2E;
+    }
+  }
+  :root[data-theme="dark"] .doc {
+    color-scheme: dark;
+    --page:         #17160F;
+    --margin-bg:    #0F0E0A;
+    --ink:          #E9E6D9;
+    --ink-soft:     #C2BFAE;
+    --ink-faint:    #8B8976;
+    --rule:         #3C3A2E;
+    --rule-light:   #2A2920;
+    --accent:       #E0A05C;
+    --table-head:   #201F16;
+    --table-border: #3C3A2E;
+    --mono-bg:      #121108;
+    --mono-border:  #332F1F;
+    --series-text:  #e0735c;
+    --series-audio: #4fc79a;
+    --chart-grid:   #2E2C22;
+    --callout-bg:   #231F13;
+    --callout-bd:   #8A6B2E;
+  }
+  :root[data-theme="light"] .doc {
+    color-scheme: light;
+    --page: #FFFFFF; --margin-bg: #ECEAE4; --ink: #1A1A18; --ink-soft: #45453F;
+    --ink-faint: #767669; --rule: #BBB9AC; --rule-light: #E2E0D5; --accent: #7A1F1F;
+    --table-head: #F2F0E8; --table-border: #CFCDBF; --mono-bg: #F4F3EC; --mono-border: #D6D4C6;
+    --series-text: #c0392b; --series-audio: #1f8a6f; --chart-grid: #D9D7C9;
+    --callout-bg: #F6F3E9; --callout-bd: #C8A24A;
+  }
+
+  .doc * { box-sizing: border-box; }
+  .doc {
+    background: var(--margin-bg);
+    color: var(--ink);
+    font-family: "Times New Roman", "Liberation Serif", "Nimbus Roman", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.62;
+    padding: 40px 16px 80px;
+  }
+  .page {
+    max-width: 740px;
+    margin: 0 auto;
+    background: var(--page);
+    padding: 56px 64px 60px;
+    border: 1px solid var(--rule-light);
+  }
+  @media (max-width: 640px) { .page { padding: 32px 22px 40px; } }
+
+  p { margin: 0 0 13px; text-align: justify; hyphens: auto; }
+  .nojustify { text-align: left; }
+
+  /* ---------- Masthead ---------- */
+  .kicker {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  h1.title {
+    font-size: 1.85rem;
+    line-height: 1.28;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .subtitle {
+    text-align: center;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0 0 24px;
+  }
+  .authorblock { text-align: center; margin-bottom: 6px; font-size: 15px; }
+  .affil { text-align: center; font-size: 13.5px; color: var(--ink-faint); margin-bottom: 22px; }
+  .datestamp { text-align: center; font-size: 13px; color: var(--ink-faint); margin-bottom: 30px; }
+
+  .abstract-box {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 6px 22px;
+    margin: 0 0 36px;
+  }
+  .abstract-label {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .abstract-box p { font-size: 14.5px; text-align: justify; }
+
+  /* ---------- TOC ---------- */
+  .toc { margin: 0 0 40px; }
+  .toc-title { font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+  .toc ol { list-style: none; padding: 0; margin: 0; counter-reset: toc; }
+  .toc li { display: flex; gap: 8px; font-size: 14.5px; margin-bottom: 4px; }
+  .toc li a { color: var(--ink); text-decoration: none; flex: 1; }
+  .toc li a:hover { text-decoration: underline; }
+  .toc .tocnum { color: var(--ink-faint); min-width: 26px; }
+  .toc .sub { padding-left: 24px; font-size: 13.5px; color: var(--ink-soft); }
+  .toc .dots { flex: 1; border-bottom: 1px dotted var(--rule); margin: 0 4px 3px; }
+
+  /* ---------- Sections ---------- */
+  section { margin-bottom: 8px; }
+  h2 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    margin: 38px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  h3 { font-size: 1.02rem; font-weight: 700; margin: 24px 0 10px; font-style: italic; }
+  h4 { font-size: 0.95rem; font-weight: 700; margin: 18px 0 8px; }
+  .secnum { margin-right: 10px; }
+
+  a { color: var(--accent); }
+  .cite { color: var(--ink); }
+  code.inline { font-family: "Courier New", monospace; font-size: 0.86em; background: var(--mono-bg); padding: 1px 5px; border: 1px solid var(--mono-border); border-radius: 3px; }
+
+  ul, ol.content-list { margin: 0 0 14px; padding-left: 26px; }
+  ul li, ol.content-list li { margin-bottom: 6px; text-align: justify; }
+
+  blockquote {
+    margin: 14px 28px;
+    padding-left: 16px;
+    border-left: 2px solid var(--rule);
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+
+  .footnote-ref { font-size: 0.75em; vertical-align: super; color: var(--accent); }
+
+  /* ---------- Callout / caveat box ---------- */
+  .callout {
+    background: var(--callout-bg);
+    border-left: 3px solid var(--callout-bd);
+    padding: 12px 18px;
+    margin: 16px 0 20px;
+    font-size: 14.5px;
+  }
+  .callout .label { font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-bottom: 6px; color: var(--ink); }
+
+  /* ---------- Tables ---------- */
+  .tbl-caption { font-size: 13.5px; margin: 18px 0 6px; }
+  .tbl-caption b { font-weight: 700; }
+  .tbl-wrap { overflow-x: auto; margin-bottom: 18px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.8px; }
+  thead th { border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--ink); padding: 6px 10px; text-align: left; font-weight: 700; background: var(--table-head); }
+  tbody td { padding: 6px 10px; border-bottom: 1px solid var(--table-border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 1.5px solid var(--ink); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tbl-note { font-size: 12.5px; color: var(--ink-faint); margin: -10px 0 18px; }
+
+  /* ---------- Figure ---------- */
+  .figure { margin: 20px 0 10px; }
+  .fig-caption { font-size: 13.5px; margin-top: 8px; }
+  .fig-caption b { font-weight: 700; }
+  .chart-frame { border: 1px solid var(--rule); padding: 14px 16px 6px; }
+  .chart-legend { display: flex; gap: 20px; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 4px; justify-content: center; }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 3px; display: inline-block; }
+  #lossChart { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-wrap { position: relative; }
+  .tooltip {
+    position: absolute; pointer-events: none;
+    background: var(--ink); color: var(--page);
+    padding: 6px 9px; font-size: 11.5px; font-family: "Courier New", monospace;
+    opacity: 0; transition: opacity .1s; white-space: nowrap; z-index: 5;
+  }
+
+  /* ---------- Quote card for model output ---------- */
+  .sample-box {
+    border: 1px solid var(--rule);
+    background: var(--mono-bg);
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .sample-urdu {
+    direction: rtl; unicode-bidi: isolate;
+    font-family: "Noto Nastaliq Urdu", "Times New Roman", serif;
+    font-size: 1.15rem; line-height: 2;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .sample-urdu .unk { color: var(--series-text); }
+
+  /* ---------- References ---------- */
+  .refs { list-style: none; padding: 0; margin: 0; }
+  .refs li { padding-left: 2em; text-indent: -2em; margin-bottom: 11px; font-size: 14px; text-align: left; }
+
+  /* ---------- Footer ---------- */
+  .pagefoot {
+    display: flex; justify-content: space-between;
+    border-top: 1px solid var(--rule);
+    margin-top: 48px; padding-top: 8px;
+    font-size: 11px; color: var(--ink-faint); letter-spacing: 0.02em;
+  }
+
+  .word-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+  .word-chip { direction: rtl; font-family: "Noto Nastaliq Urdu", serif; border: 1px solid var(--rule); padding: 3px 10px; font-size: 14.5px; }
+  .word-chip .gloss { font-family: "Times New Roman", serif; direction: ltr; font-size: 11px; color: var(--ink-faint); margin-left: 6px; }
+
+  @media print {
+    .doc { background: #fff; padding: 0; }
+    .page { border: none; max-width: 100%; padding: 0; }
+  }
+</style>
+
+<div class="doc">
+<div class="page">
+
+  <div class="kicker">Internal Research Report &middot; Siglance &middot; Draft v2</div>
+  <h1 class="title">Towards Urdu Full-Duplex Spoken Dialogue: Pipeline, Pilot Fine-Tune, and a Data-Scale Diagnosis</h1>
+  <p class="subtitle">A proof-of-concept adaptation of Kyutai&rsquo;s Moshi to Pakistani Urdu, with an account of why full-duplex speech models &mdash; including Moshi itself &mdash; still fall short of natural conversational voice</p>
+  <p class="authorblock">S.&nbsp;Basit</p>
+  <p class="affil">Siglance &middot; Compiled 8&ndash;9 October 2026 &middot; Status: proof-of-concept, paused pending data</p>
+
+  <div class="abstract-box">
+    <div class="abstract-label">Abstract</div>
+    <p>No full-duplex (simultaneous listen-and-speak) conversational voice model exists for Urdu, and no channel-separated Urdu conversation dataset exists to train one. This report documents a proof-of-concept that built both: a 32,000-token Urdu SentencePiece tokenizer; a synthetic stereo-dialogue corpus (1,367 two-speaker dialogues, 38.33&nbsp;hours) assembled by pairing Mozilla Common Voice Urdu clips; and a full fine-tune of Kyutai&rsquo;s Moshi speech-text model, extended to a dual-stream, 16-codebook full-duplex configuration. Training ran 5 epochs (110 steps, &sim;6 GPU-hours, &sim;$17&ndash;22) and reached a final loss of 5.39 (text 3.72, audio 1.67). The model emits valid Urdu vocabulary but no coherent sentence structure, consistent with using roughly 0.02&ndash;0.13% of the data and compute of the nearest published precedent, J-Moshi. Separately, this report establishes &mdash; from Kyutai&rsquo;s own published evaluation &mdash; that Moshi itself, prior to any language adaptation, already exhibits measurable gaps from natural human speech: a quantified knowledge loss from audio training, a synthetic public voice that scores worse than its voice-actor-conditioned counterpart on every reported metric, word-error rates that trail dedicated non-streaming ASR/TTS systems, and a safety score well behind contemporary text LLMs. These two findings are reported together because they bound the same project from opposite ends: even a fully-resourced Moshi fine-tune inherits the base model&rsquo;s own ceiling on naturalness, while this specific Urdu run additionally sits far below that ceiling on data and compute.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><span class="tocnum">1</span><a href="#s1">Introduction</a></li>
+      <li class="sub"><a href="#s11">1.1&ensp;Motivation</a></li>
+      <li class="sub"><a href="#s12">1.2&ensp;Report scope and methodology</a></li>
+      <li><span class="tocnum">2</span><a href="#s2">Background: Moshi and the Full-Duplex Paradigm</a></li>
+      <li class="sub"><a href="#s21">2.1&ensp;What Kyutai built</a></li>
+      <li class="sub"><a href="#s22">2.2&ensp;Where Moshi falls short of a real voice</a></li>
+      <li class="sub"><a href="#s23">2.3&ensp;Related adaptations and contemporaneous work</a></li>
+      <li><span class="tocnum">3</span><a href="#s3">System and Pipeline</a></li>
+      <li><span class="tocnum">4</span><a href="#s4">Data</a></li>
+      <li><span class="tocnum">5</span><a href="#s5">Experimental Setup</a></li>
+      <li><span class="tocnum">6</span><a href="#s6">Results</a></li>
+      <li class="sub"><a href="#s61">6.1&ensp;Training dynamics</a></li>
+      <li class="sub"><a href="#s62">6.2&ensp;Generated output</a></li>
+      <li class="sub"><a href="#s63">6.3&ensp;Scale comparison</a></li>
+      <li><span class="tocnum">7</span><a href="#s7">Discussion: The Decoupling Phenomenon</a></li>
+      <li><span class="tocnum">8</span><a href="#s8">Limitations and Threats to Validity</a></li>
+      <li><span class="tocnum">9</span><a href="#s9">Roadmap</a></li>
+      <li><span class="tocnum">10</span><a href="#s10">Conclusion</a></li>
+      <li><span class="tocnum"></span><a href="#refs">References</a></li>
+      <li><span class="tocnum">A</span><a href="#appA">Appendix: Positioning This Work as a Formal Publication</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <section id="s1">
+    <h2><span class="secnum">1</span>Introduction</h2>
+    <h3 id="s11">1.1&ensp;Motivation</h3>
+    <p>The research notes behind this project (preserved in full in the project&rsquo;s <code class="inline">research/</code> archive) identify a fourfold gap it set out to close: no full-duplex conversational system exists for Urdu; no channel-separated Urdu conversation dataset exists anywhere; no production-quality open-source Urdu text-to-speech system exists; and no Urdu language-model tokenizer is purpose-built for conversational speech. This report concerns the first and most ambitious of the four &mdash; the full-duplex model &mdash; while using the dataset gap itself as the central constraint the results must be read against.</p>
+    <p>Full-duplex is the defining design choice. A conventional (&ldquo;half-duplex&rdquo;) voice assistant pipes audio through automatic speech recognition, a language model, and text-to-speech sequentially, going deaf while it speaks, with 500&ndash;900&nbsp;ms of accumulated latency and hand-coded turn-taking. Moshi instead predicts its own text, its own audio, and the user&rsquo;s audio jointly at every 80&nbsp;ms frame, with turn-taking intended to emerge from training rather than from rules <span class="cite">(D&eacute;fossez et al., 2024)</span>. That behaviour is the target of this project, which is why the Urdu training data had to be built as two-channel stereo &mdash; left channel the agent, right channel the user &mdash; rather than ordinary single-channel speech.</p>
+    <h3 id="s12">1.2&ensp;Report scope and methodology</h3>
+    <p>This report was compiled directly from the project&rsquo;s primary artifacts, not from prior summaries of them: the raw training log (<code class="inline">training2.log</code>, all 110 logged optimizer steps), the ten decoded generation samples, the dataset manifests and build logs, the repository README, and four archived papers (D&eacute;fossez et al., 2024; Ohashi et al., 2025; Kyutai, 2025; Lin et al., 2025). Every number attributed to this project in &sect;4&ndash;&sect;9 traces to one of those files. Every claim attributed to Moshi itself in &sect;2 traces to a specific section or table of <span class="cite">D&eacute;fossez et al. (2024)</span>, cited inline. No figure in this report is estimated.</p>
+  </section>
+
+  <!-- 2 -->
+  <section id="s2">
+    <h2><span class="secnum">2</span>Background: Moshi and the Full-Duplex Paradigm</h2>
+    <h3 id="s21">2.1&ensp;What Kyutai built</h3>
+    <p>Moshi, released by the French laboratory Kyutai in September 2024, is a speech-text foundation model positioned as the first real-time, full-duplex spoken dialogue system <span class="cite">(D&eacute;fossez et al., 2024)</span>. Its backbone, <i>Helium</i>, is a 7-billion-parameter text language model pretrained on 2.1 trillion tokens of public English data. Audio is handled by <i>Mimi</i>, a neural audio codec that converts waveforms into discrete tokens and back using residual vector quantization at 12.5&nbsp;Hz; unusually, Mimi&rsquo;s first codebook is trained to carry semantic (WavLM-distilled) information jointly with the later codebooks&rsquo; acoustic detail, rather than relying on a separate semantic token stream as prior audio-language models did.</p>
+    <p>The model&rsquo;s central architectural idea is &ldquo;Inner Monologue&rdquo;: at every frame it predicts a time-aligned text token <i>before</i> the eight audio tokens that frame also emits, conditioning the audio prediction on that text. Kyutai&rsquo;s own ablation shows this is not a minor addition &mdash; it very nearly triples Moshi&rsquo;s accuracy on spoken question-answering benchmarks for a marginal 17-vs-16 token increase in per-frame cost. A second architectural choice, modeling the user&rsquo;s audio as a second parallel stream rather than assuming alternating turns, is what removes the concept of a hard-coded speaker turn and is the mechanism this project&rsquo;s Urdu adaptation extends (&sect;3). The combination yields a theoretical latency of 160&nbsp;ms and a measured practical latency of 200&nbsp;ms &mdash; Kyutai note this is faster than the 230&nbsp;ms average response time measured across ten languages in natural human conversation <span class="cite">(D&eacute;fossez et al., 2024, &sect;1)</span>.</p>
+
+    <h3 id="s22">2.2&ensp;Where Moshi falls short of a real voice</h3>
+    <p>Latency and architecture are where Moshi is strongest; naturalness and reliability are where Kyutai&rsquo;s own published evaluation shows the most room between Moshi and a real conversational partner. Six gaps are documented directly in the paper, independent of any language adaptation:</p>
+
+    <h4>Textual knowledge is measurably eroded by audio training.</h4>
+    <p>Moshi&rsquo;s MMLU accuracy is 49.7, down from 54.3 for the Helium text-only checkpoint it was built from <span class="cite">(D&eacute;fossez et al., 2024, Table&nbsp;7)</span>. Kyutai&rsquo;s own error analysis further finds Moshi disproportionately fails multi-sentence or syntactically complex questions, attributing this to fine-tuning on oral-style conversational data that rarely contains such structures &mdash; a plausible but unresolved hypothesis in the source paper itself.</p>
+
+    <h4>The public voice is synthetic, and Kyutai&rsquo;s own numbers show it is the worse-performing option.</h4>
+    <p>For consent and safety reasons, Moshi does not ship the real voice actor recordings used to condition its training data; it ships a synthetic voice built from them. In a direct ablation, Kyutai report that switching from the voice-actor-conditioned model to the shipped synthetic-voice model lowers performance on every reported metric: sWUGGY 63.0&rarr;60.9, sBLIMP 55.2&rarr;54.6, spoken StoryCloze 62.7&rarr;60.9, and MMLU 49.7&rarr;48.7 <span class="cite">(D&eacute;fossez et al., 2024, Table&nbsp;7)</span>. The version of Moshi anyone can actually talk to is, by the authors&rsquo; own measurement, not the best-performing version they built.</p>
+
+    <h4>Streaming forces a quality trade against dedicated ASR/TTS systems.</h4>
+    <p>Moshi&rsquo;s streaming TTS reaches 4.7% word-error rate on LibriSpeech test-clean &mdash; better than Vall-E&rsquo;s 5.9% but worse than NaturalSpeech&nbsp;3&rsquo;s 1.81%, despite Moshi needing only 2&nbsp;seconds of lookahead against those models&rsquo; full-sequence access. Its streaming ASR reaches 5.7% WER against a Streaming FastConformer baseline&rsquo;s 3.6% at comparable lookahead <span class="cite">(D&eacute;fossez et al., 2024, &sect;5.7)</span>. Real-time full-duplex operation is traded against transcription and synthesis accuracy that specialised, non-duplex systems still exceed.</p>
+
+    <h4>Voice identity is not perfectly stable.</h4>
+    <p>Running a speaker-verification model over 100 hours of generated Moshi-vs-synthetic-user conversation, Kyutai find that 1.3% of the model&rsquo;s own speech segments resemble the <em>user&rsquo;s</em> voice more closely than Moshi&rsquo;s reference voice, rather than the reverse <span class="cite">(D&eacute;fossez et al., 2024, &sect;6.3, Table&nbsp;14)</span> &mdash; a small but nonzero rate of voice identity drift the paper reports as a named safety concern, not a solved problem.</p>
+
+    <h4>Safety trails contemporary text LLMs by a wide margin.</h4>
+    <p>On the ALERT toxicity benchmark, Moshi scores an aggregate 83.05, compared with 96.95 for GPT-3.5, 99.18 for GPT-4, and 99.98 for Llama&nbsp;2 <span class="cite">(D&eacute;fossez et al., 2024, &sect;6.1)</span>. Kyutai attribute the gap to industry models&rsquo; far larger investment in red-teaming and annotated feedback, and place Moshi explicitly mid-table rather than claiming parity.</p>
+
+    <h4>Compression for low-resource deployment introduces audible artifacts.</h4>
+    <p>Quantizing Moshi for cheaper inference measurably degrades output: at an aggressive 2-bit weight setting, 83.1% of sampled generations exhibit gibberish-audio artifacts in Kyutai&rsquo;s own entropy-based detector, up from effectively 0% unquantized <span class="cite">(D&eacute;fossez et al., 2024, Appendix&nbsp;D, Table&nbsp;12)</span>. Any deployment that compresses Moshi to run more cheaply &mdash; the regime a project like this one would eventually need for affordable Urdu inference &mdash; inherits this trade-off directly.</p>
+
+    <div class="callout">
+      <span class="label">Why this matters for the Urdu adaptation</span>
+      None of the above six gaps are introduced by the work in this report &mdash; they are present in Moshi&rsquo;s English/French base model, published by its own authors. They set the ceiling this project&rsquo;s Urdu fine-tune inherits even in a hypothetical fully-resourced run: naturalness, safety, and transcription accuracy would still trail a dedicated cascaded system by Kyutai&rsquo;s own numbers. The findings in &sect;6&ndash;&sect;8 of this report describe a second, independent gap &mdash; this specific run sitting far below even that ceiling, for lack of data and compute &mdash; which is the gap that is actually addressable on this project&rsquo;s own budget.
+    </div>
+
+    <h3 id="s23">2.3&ensp;Related adaptations and contemporaneous work</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Work</th><th>Relevance</th></tr></thead>
+        <tbody>
+          <tr><td><b>J-Moshi</b> <span class="cite">(Ohashi et al., 2025)</span></td><td>Closest precedent: adapts the same <code class="inline">moshi-finetune</code> fork to Japanese. Source of the 69,000&nbsp;h / &sim;4,600 GPU-hour scale this report benchmarks against (&sect;6.3), and of the text&ndash;audio &ldquo;decoupling&rdquo; diagnosis used in &sect;7.</td></tr>
+          <tr><td><b>PersonaPlex</b> <span class="cite">(Roy et al., 2026)</span></td><td>Fine-tuned Moshi with zero architecture changes to a reported DMOS of 3.90 using &sim;2,250&nbsp;h synthetic plus 1,217&nbsp;h real two-channel Fisher audio; source of the &ldquo;negative-silence stitching&rdquo; interruption technique referenced in &sect;9.</td></tr>
+          <tr><td><b>Kyutai DSM</b> <span class="cite">(Kyutai, 2025)</span></td><td>Describes the text-ahead streaming design used by Moshi&rsquo;s companion TTS model &mdash; the candidate architecture for a future synthetic Urdu dialogue generator (&sect;9).</td></tr>
+          <tr><td><b>Full-Duplex-Bench</b> <span class="cite">(Lin et al., 2025)</span></td><td>Defines standard metrics (turn-over rate, backchannel frequency, interruption latency) for scoring full-duplex behaviour; not yet applied to this project&rsquo;s output (&sect;8).</td></tr>
+          <tr><td><b>CharDuplex</b> <span class="cite">(Wu et al., 2026)</span></td><td>Contemporaneous full-duplex system built on GLM-4-Voice (not Moshi) adding character-consistency training; representative of the field&rsquo;s current direction toward persona-conditioned full-duplex models, a dimension this project does not address.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="s3">
+    <h2><span class="secnum">3</span>System and Pipeline</h2>
+    <p>Common Voice is single-utterance read speech with no real conversations in it, so the training corpus had to be synthesized: two different speakers&rsquo; clips are interleaved into a stereo file to approximate a two-party dialogue. The pipeline runs as eleven stages:</p>
+    <div class="tbl-caption"><b>Table 1.</b> The eleven-stage data-to-checkpoint pipeline, in execution order.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th class="num">#</th><th>Stage</th><th>Input &rarr; output</th></tr></thead>
+        <tbody>
+          <tr><td class="num">0</td><td>Text corpus</td><td>HF Dolly-15k-ur + pre-existing <code class="inline">ur.txt</code> (6.1&nbsp;GB)</td></tr>
+          <tr><td class="num">1</td><td>Tokenizer</td><td><code class="inline">ur.txt</code> &rarr; Urdu SentencePiece BPE, vocabulary 32,000</td></tr>
+          <tr><td class="num">2</td><td>Corpus assembly</td><td>Common Voice v25 &rarr; filtered manifest (dev/test speakers excluded)</td></tr>
+          <tr><td class="num">3</td><td>Mono stitch</td><td>Same-speaker packing &rarr; 57.14&nbsp;h (built, never consumed downstream)</td></tr>
+          <tr><td class="num">4</td><td>Stereo dialogues</td><td>Gender-aware speaker pairing &rarr; 1,367 dialogues / 38.33&nbsp;h (left&nbsp;=&nbsp;agent, right&nbsp;=&nbsp;user)</td></tr>
+          <tr><td class="num">5</td><td>Word timestamps</td><td>WhisperX large-v3 (<code class="inline">--language ur</code>) on a GPU pod</td></tr>
+          <tr><td class="num">6</td><td>Mimi audio tokens</td><td>Frozen Mimi codec &rarr; RVQ tokens, 8 codebooks, 12.5&nbsp;Hz</td></tr>
+          <tr><td class="num">7</td><td>Text tokens</td><td>Word timestamps + Urdu SPM &rarr; token arrays</td></tr>
+          <tr><td class="num">8</td><td>Merge to parquet</td><td>Text + audio &rarr; 1,362-row training parquet (5 dialogues dropped by a name-mismatch guard)</td></tr>
+          <tr><td class="num">9</td><td>Dual-stream init</td><td>Reinitialize Urdu text embeddings; add user-audio heads (<code class="inline">dep_q=16</code>)</td></tr>
+          <tr><td class="num">10</td><td>Fine-tune</td><td>DeepSpeed Zero-3, 5 epochs &rarr; checkpoint <code class="inline">step_110</code></td></tr>
+          <tr><td class="num">11</td><td>Generate and decode</td><td>10 continuations &rarr; WAV + Urdu transcript</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two choices make this genuinely full-duplex rather than a cosmetic relabeling. First, every training example is stereo, built by a dialogue constructor with gender-aware pairing (40 speaker pairs: 14 mixed-gender, 26 same-gender) under a fixed random seed. Second, the model is extended at initialization via a user-stream flag that raises the depth transformer&rsquo;s codebook count from 8 to 16 &mdash; eight for the model&rsquo;s own audio, eight for the user&rsquo;s &mdash; adding the parameters needed to predict both streams at once.</p>
+    <p>The fine-tuning framework itself was a deliberate choice: the official <code class="inline">kyutai-labs/moshi-finetune</code> repository cannot swap the text tokenizer, which would break the Urdu inner monologue outright. The <code class="inline">nu-dialogue/moshi-finetune</code> fork used for J-Moshi supports a custom tokenizer path and text-embedding reinitialization, and was patched further with roughly eight additional fixes that remain un-upstreamed.</p>
+  </section>
+
+  <!-- 4 -->
+  <section id="s4">
+    <h2><span class="secnum">4</span>Data</h2>
+    <p>Everything traces to one irreplaceable source &mdash; Mozilla Common Voice 25.0 Urdu &mdash; plus a separately purchased, ultimately unused, ten-hour single-speaker text-to-speech corpus.</p>
+    <div class="tbl-caption"><b>Table 2.</b> Dataset inventory and role in the final pipeline.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Dataset</th><th class="num">Hours</th><th class="num">Count</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>Common Voice v25 Urdu (raw)</td><td class="num">294.65</td><td class="num">250,779</td><td>Source corpus</td></tr>
+          <tr><td>Filtered manifest</td><td class="num">53.33</td><td class="num">51,279</td><td>Train-only (dev/test speakers and clips excluded as a leakage guard)</td></tr>
+          <tr><td>Mono stitched segments</td><td class="num">57.14</td><td class="num">2,264</td><td>Built, never consumed downstream</td></tr>
+          <tr><td><b>Stereo dialogues</b></td><td class="num"><b>38.33</b></td><td class="num"><b>1,367</b></td><td>The full-duplex training audio</td></tr>
+          <tr><td>Final training parquet</td><td class="num">&mdash;</td><td class="num">1,362</td><td>What the model actually trained on</td></tr>
+          <tr><td>10-hour Urdu TTS corpus</td><td class="num">9.8</td><td class="num">5,311</td><td>Staged, never wired into training</td></tr>
+          <tr><td>Urdu text corpus (<code class="inline">ur.txt</code>)</td><td class="num">&mdash;</td><td class="num">&sim;26.65&nbsp;M lines</td><td>Tokenizer training only</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <span class="label">Evaluation-design gap</span>
+      There is no held-out validation or test split in the derived training data &mdash; the parquet is literally named <code class="inline">train-001-of-001</code>. Model quality in &sect;6 was assessed by inspecting generated continuations, not by a held-out metric. This is stated here, not as a caveat appended later, because it bounds how any result in this report should be read.
+    </div>
+    <p>The stereo data&rsquo;s central limitation is that turns are disjoint rather than overlapping: when one speaker&rsquo;s channel carries audio, the other is pure digital silence, confirmed directly from the dialogue-builder&rsquo;s logic. There is no backchannel and no barge-in for the model to learn from, and because turns are drawn from unrelated Common Voice sentences, there is no semantic coherence between one turn and the next. This is very likely the largest single reason full-duplex <i>timing</i> behaviour did not emerge in &sect;6 &mdash; the data teaches turn structure, not turn dynamics.</p>
+  </section>
+
+  <!-- 5 -->
+  <section id="s5">
+    <h2><span class="secnum">5</span>Experimental Setup</h2>
+    <p>Fine-tuning used DeepSpeed Zero-3 with fp16 compute and float32 master weights, full parameter fine-tuning (no LoRA), on two GPUs (RunPod A100/H100 instances).</p>
+    <div class="tbl-caption"><b>Table 3.</b> Hyperparameters, cross-checked against <code class="inline">training2.log</code>.</div>
+    <div class="tbl-wrap">
+      <table>
+        <tbody>
+          <tr><td>Learning rate</td><td>3&times;10<sup>&minus;5</sup>, linear warmup over 100 steps</td></tr>
+          <tr><td>Batch size</td><td>per-device 2, gradient accumulation 16, 2 GPUs &rarr; effective 64</td></tr>
+          <tr><td>Epochs / steps</td><td>5 epochs &rarr; 110 optimizer steps</td></tr>
+          <tr><td>Sequence length</td><td>max 2,048 frames (&sim;164&nbsp;s at 12.5&nbsp;Hz), min 128</td></tr>
+          <tr><td>Optimizer</td><td>AdamW, &beta;=(0.9, 0.95), &epsilon;=10<sup>&minus;5</sup>, weight decay 0.1, activation checkpointing</td></tr>
+          <tr><td>Loss weights</td><td>text padding 0.5&times;, semantic (codebook&nbsp;0) 100&times;, acoustic 1&times;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section id="s6">
+    <h2><span class="secnum">6</span>Results</h2>
+    <h3 id="s61">6.1&ensp;Training dynamics</h3>
+    <p>Loss fell from 12.99 at step&nbsp;1 to 5.39 at step&nbsp;110. The text and audio terms are plotted separately below; every point is read directly from <code class="inline">training2.log</code>.</p>
+
+    <div class="figure">
+      <div class="chart-frame">
+        <div class="chart-legend">
+          <span><span class="swatch" style="background:var(--series-text)"></span>Text loss</span>
+          <span><span class="swatch" style="background:var(--series-audio)"></span>Audio loss</span>
+        </div>
+        <div class="chart-wrap">
+          <svg id="lossChart" viewBox="0 0 640 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Line chart of text and audio loss over 110 training steps, both declining, text from about 6.5 to 3.7 and audio from about 6.6 to 1.7"></svg>
+          <div class="tooltip" id="chartTooltip"></div>
+        </div>
+      </div>
+      <div class="fig-caption"><b>Figure 1.</b> Text and audio loss over 110 optimizer steps (5 epochs, effective batch 64). Final values: text 3.72, audio 1.67, total 5.39. Source: <code class="inline">weights/trained_models/training2.log</code>.</div>
+    </div>
+
+    <h3 id="s62">6.2&ensp;Generated output</h3>
+    <p>Ten 20-second continuations were generated from the final checkpoint and decoded to Urdu text. The pattern is consistent across all ten: individually valid Urdu words separated by a decoder placeholder token for unresolved predictions, with no sentence-level grammar connecting them.</p>
+    <div class="sample-box">
+      <div class="sample-urdu">
+        <span class="unk">&#8263;</span> نے <span class="unk">&#8263;</span> تجھ <span class="unk">&#8263;</span> فی <span class="unk">&#8263;</span> بیان <span class="unk">&#8263;</span> ملا <span class="unk">&#8263;</span>دھی <span class="unk">&#8263;</span> آئی <span class="unk">&#8263;</span> بے <span class="unk">&#8263;</span>رہ <span class="unk">&#8263;</span> بدل <span class="unk">&#8263;</span> جہاں <span class="unk">&#8263;</span>سر <span class="unk">&#8263;</span> عوام <span class="unk">&#8263;</span> اردو <span class="unk">&#8263;</span> جا <span class="unk">&#8263;</span> رہی <span class="unk">&#8263;</span> تن <span class="unk">&#8263;</span> مز <span class="unk">&#8263;</span> اپنی <span class="unk">&#8263;</span> سفر <span class="unk">&#8263;</span> تھے <span class="unk">&#8263;</span> علی <span class="unk">&#8263;</span> تھے <span class="unk">&#8263;</span> جائے <span class="unk">&#8263;</span> وجود <span class="unk">&#8263;</span> دیتے <span class="unk">&#8263;</span> امام
+      </div>
+      Source: <code class="inline">weights/trained_models/samples/8.txt</code>, raw decoder output. Red marks denote the decoder&rsquo;s unresolved-token placeholder.
+    </div>
+    <p>Recurring, correctly-inflected content words across the ten samples include the following, all directly present in the raw <code class="inline">samples/*.txt</code> files:</p>
+    <div class="word-chip-row">
+      <span class="word-chip">پنجاب<span class="gloss">Punjab</span></span>
+      <span class="word-chip">خوشی<span class="gloss">happiness</span></span>
+      <span class="word-chip">زندگی<span class="gloss">life</span></span>
+      <span class="word-chip">گوادر<span class="gloss">Gwadar</span></span>
+      <span class="word-chip">موٹرسائیکل<span class="gloss">motorcycle</span></span>
+    </div>
+
+    <h3 id="s63">6.3&ensp;Scale comparison</h3>
+    <p>The most load-bearing number in this report is comparative rather than absolute: how little data and compute this run used relative to the nearest working precedent for a non-English Moshi fine-tune.</p>
+    <div class="tbl-caption"><b>Table 4.</b> This project against J-Moshi <span class="cite">(Ohashi et al., 2025)</span>.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th></th><th>J-Moshi (Japanese)</th><th>This project (Urdu)</th><th class="num">Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>Training audio</td><td>69,000&nbsp;h</td><td>38.33&nbsp;h</td><td class="num">0.056%</td></tr>
+          <tr><td>Compute</td><td>&sim;4,600 GPU-h</td><td>&sim;6 GPU-h</td><td class="num">0.13%</td></tr>
+          <tr><td>Result</td><td>Coherent Japanese dialogue</td><td>Valid words, no syntax</td><td class="num">&mdash;</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Read against that baseline, Urdu content words appearing in the text stream at all &mdash; rather than noise or English leakage &mdash; is the positive result: the tokenizer swap, text-embedding reinitialization, and dual-stream extension transferred correctly. What is missing is scale, not a working mechanism. Total cost for the full proof-of-concept, including the WhisperX and Mimi preprocessing pods, was $17&ndash;22.</p>
+  </section>
+
+  <!-- 7 -->
+  <section id="s7">
+    <h2><span class="secnum">7</span>Discussion: The Decoupling Phenomenon</h2>
+    <p>Moshi&rsquo;s depth transformer predicts text first at each frame, then conditions its audio prediction on that text (&sect;2.1) &mdash; the mechanism intended to keep what the model &ldquo;says&rdquo; and what it &ldquo;speaks&rdquo; aligned. Early in training, when text predictions are near-random, the audio path learns to largely ignore them, and the two streams decouple. J-Moshi&rsquo;s authors report this resolves once text loss drops below roughly 3.0 with sustained training; this run&rsquo;s text loss ends at 3.72, still inside the decoupled regime. Two structural factors compound the pure scale gap:</p>
+    <ul>
+      <li><b>Sparse text supervision.</b> Roughly 95% of frames are padding (silence or non-speech), so the text stream receives on the order of 20&times; less learning signal per step than the audio stream.</li>
+      <li><b>Cold-start text embeddings.</b> The Urdu text embedding table was reinitialized from a Gaussian fit to the original statistics, not warm-started from any existing Urdu representation &mdash; all 32,000 tokens&rsquo; embeddings are learned from this run&rsquo;s 38.33&nbsp;hours alone.</li>
+    </ul>
+    <p>Two further risks are noted in the project&rsquo;s research materials but not empirically tested here, and are labeled as such: Mimi&rsquo;s semantic codebook is distilled from WavLM, an English-centric self-supervised model, so Urdu-specific phonology (retroflexes, aspirated stops, schwa deletion in Nastaliq orthography) may collapse onto codes that do not distinguish them; and register (<i>aap/tum/tu</i>) and Urdu&ndash;English code-switching are both absent from the data-generation process, so a model trained at scale on this pipeline would not reliably handle either without separate intervention.</p>
+  </section>
+
+  <!-- 8 -->
+  <section id="s8">
+    <h2><span class="secnum">8</span>Limitations and Threats to Validity</h2>
+    <ul>
+      <li><b>No held-out evaluation.</b> Quality claims in &sect;6.2 rest on reading ten generated samples, not a validation metric (&sect;4).</li>
+      <li><b>Checkpoint reconciliation unresolved.</b> The locally retained checkpoint is a 3.97&nbsp;GB single-shard fp16 file; the authoritative copy is a 16&nbsp;GB private HuggingFace upload. The two have not been diffed.</li>
+      <li><b>Logged compute vs. README mismatch.</b> The project README states H100 / 5.3&nbsp;h / &sim;105 steps; <code class="inline">training2.log</code> shows 2 GPUs / &sim;35 minutes / 110 steps. This report uses the log as authoritative.</li>
+      <li><b>Silent data loss.</b> Five of 1,367 dialogues (0.4%) were dropped by a text/audio filename-mismatch guard during parquet assembly, with no record of which or why.</li>
+      <li><b>57.14&nbsp;h of mono-stitched audio was produced and never used</b> &mdash; the stereo builder re-decodes raw clips rather than consuming it.</li>
+      <li><b>No full-duplex behavioural evaluation.</b> Full-Duplex-Bench-style metrics <span class="cite">(Lin et al., 2025)</span> were never applied; there is no evidence yet that the dual-stream architecture produces full-duplex <i>behaviour</i>, only that it trains without error.</li>
+    </ul>
+  </section>
+
+  <!-- 9 -->
+  <section id="s9">
+    <h2><span class="secnum">9</span>Roadmap</h2>
+    <div class="tbl-caption"><b>Table 5.</b> Next steps, ordered cheapest to highest-impact.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Step</th><th>Cost</th><th>Expected gain</th></tr></thead>
+        <tbody>
+          <tr><td>Train 15&ndash;30 epochs on the same 38.33&nbsp;h</td><td>$30&ndash;60</td><td>Resolve decoupling; cleaner text</td></tr>
+          <tr><td>Raise text-loss weight</td><td>&sim;$30</td><td>Faster vocabulary convergence</td></tr>
+          <tr><td>Init from pre-trained Urdu embeddings</td><td>&sim;$15</td><td>Skip &sim;10 epochs of vocabulary learning</td></tr>
+          <tr><td>LoRA on text path only <i>(not yet implemented)</i></td><td>&sim;$10/iter</td><td>Cheap tokenizer iteration</td></tr>
+          <tr><td><b>Acquire 200+&nbsp;h real channel-separated conversational Urdu</b></td><td>major data effort</td><td>The actual bottleneck</td></tr>
+          <tr><td>Full retrain at scale, 30+ epochs, on real data</td><td>$500&ndash;2,000</td><td>Demoable Urdu full-duplex model</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-caption"><b>Table 6.</b> Expected quality by data strategy, from the project&rsquo;s research notes.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Strategy</th><th class="num">Expected DMOS</th><th>Timeline</th></tr></thead>
+        <tbody>
+          <tr><td>Synthetic only (current path, scaled up)</td><td class="num">2.3&ndash;2.8</td><td>4&ndash;6&nbsp;mo</td></tr>
+          <tr><td>+ 50&nbsp;h real stereo</td><td class="num">3.0&ndash;3.3</td><td>6&ndash;9&nbsp;mo</td></tr>
+          <tr><td>+ 200&nbsp;h real stereo</td><td class="num">3.3&ndash;3.7</td><td>12&ndash;18&nbsp;mo</td></tr>
+          <tr><td>+ custom Urdu TTS, 5,000&ndash;20,000&nbsp;h synthetic</td><td class="num">&ge;3.8</td><td>18&ndash;24&nbsp;mo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section id="s10">
+    <h2><span class="secnum">10</span>Conclusion</h2>
+    <p>This project is a verifiable proof-of-concept: an Urdu tokenizer trained and swapped into Moshi cleanly, a synthetic full-duplex stereo dataset built from Common Voice, a dual-stream architecture extension applied without modifying Moshi&rsquo;s core design, and a full fine-tune that produced real Urdu vocabulary in the text stream for roughly $20 of compute. It is read against two ceilings, not one: Moshi&rsquo;s own documented limits on naturalness, safety, and transcription accuracy (&sect;2.2), and this run&rsquo;s own, much lower, data-and-compute ceiling (&sect;6.3). The gap to a usable model is well characterized &mdash; scale of channel-separated conversational data, not a flaw in the approach &mdash; and the work is paused by design, since further training on the same 38.33&nbsp;hours would not resolve it. The highest-leverage next action is unchanged from the project&rsquo;s own conclusion: acquire or synthesize 200+ hours of real two-channel conversational Urdu before spending further compute.</p>
+  </section>
+
+  <!-- References -->
+  <section id="refs">
+    <h2>References</h2>
+    <ul class="refs">
+      <li>D&eacute;fossez, A., Mazar&eacute;, L., Orsini, M., Royer, A., P&eacute;rez, P., J&eacute;gou, H., Grave, E., &amp; Zeghidour, N. (2024). <i>Moshi: a speech-text foundation model for real-time dialogue.</i> Kyutai. arXiv:2410.00037.</li>
+      <li>Kyutai. (2025). <i>Streaming sequence-to-sequence learning with delayed streams modeling.</i> arXiv:2509.08753.</li>
+      <li>Lin, &hellip; et al. (2025). <i>Full-Duplex-Bench: a benchmark to evaluate full-duplex spoken dialogue models on turn-taking.</i> arXiv:2503.04721.</li>
+      <li>Mozilla. (2026). <i>Common Voice 25.0 (Urdu subset).</i> commonvoice.mozilla.org.</li>
+      <li>Ohashi, A., et al. (2025). <i>Towards a Japanese full-duplex spoken dialogue system (J-Moshi).</i> Nagoya University. arXiv:2506.02979.</li>
+      <li>Roy, &hellip; et al. (2026). <i>PersonaPlex.</i> NVIDIA. ICASSP 2026.</li>
+      <li>Wu, D., Liu, Y., Chen, C., Liu, H., &amp; Chng, E. S. (2026). <i>CharDuplex: building character-consistent full-duplex spoken dialogue models.</i> arXiv:2609.34461.</li>
+    </ul>
+  </section>
+
+  <!-- Appendix -->
+  <section id="appA">
+    <h2><span class="secnum">A</span>Appendix: Positioning This Work as a Formal Publication</h2>
+    <p>Three title options were considered for this report, in increasing order of formality. The title used above (&sect;title) mirrors J-Moshi&rsquo;s own naming convention and is recommended if this work is extended toward a preprint. A plainer alternative &mdash; <i>&ldquo;Adapting Moshi to Urdu: A Full-Duplex Speech-Dialogue Proof-of-Concept&rdquo;</i> &mdash; is safer for an internal-only technical report. A third, more arXiv-styled option is <i>&ldquo;Urdu-Moshi: Fine-Tuning a Full-Duplex Speech-Text Model for Low-Resource Conversational Urdu.&rdquo;</i></p>
+    <p>Four changes would most strengthen the findings before any external claim is made from them: (1) carve a held-out split from the 1,362 existing training dialogues and re-report &sect;6 against it &mdash; no new data or compute required; (2) score the existing ten samples with a human or Full-Duplex-Bench-style rubric rather than describing them qualitatively; (3) reconcile the two checkpoints referenced in &sect;8 before quoting final-model numbers externally; (4) resolve the README-vs-log compute discrepancy and correct whichever source is wrong. A short ethics statement is also currently absent from the project&rsquo;s source material and would be expected by any venue: at minimum, the consent basis of Common Voice contributors, the misuse potential of a conversational voice model, and the honorific-register risk noted in &sect;7 (wrong register in Urdu reads as a social error, not merely as unnaturalness) should be addressed directly rather than left implicit.</p>
+  </section>
+
+  <div class="pagefoot">
+    <span>Urdu-Moshi &mdash; Internal Research Report, Draft v2</span>
+    <span>Compiled 9 Oct 2026</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function () {
+  const svg = document.getElementById('lossChart');
+  const tooltip = document.getElementById('chartTooltip');
+  if (!svg) return;
+
+  const data = [
+    [1,0,12.98616,6.35457,6.63159],[2,0,13.26863,6.54128,6.72735],[3,0,13.08942,6.43624,6.65318],[4,0,12.94851,6.48971,6.45880],[5,0,12.98777,6.40927,6.57850],
+    [6,0,12.44851,6.18702,6.26149],[7,0,11.77473,6.02623,5.74850],[8,0,11.09757,5.99122,5.10635],[9,0,10.29293,5.71825,4.57468],[10,0,9.80912,5.63140,4.17772],
+    [11,0,9.61502,5.58117,4.03385],[12,0,9.47601,5.71142,3.76458],[13,0,9.10407,5.57102,3.53304],[14,0,8.75045,5.40927,3.34118],[15,0,8.77392,5.43019,3.34373],
+    [16,0,8.45454,5.16807,3.28647],[17,0,7.96613,5.07198,2.89415],[18,0,7.71910,4.78902,2.93008],[19,0,7.99184,5.05501,2.93683],[20,0,7.86193,4.94810,2.91383],
+    [21,0,7.50722,4.85686,2.65036],[22,0,7.78950,5.00237,2.78712],[23,1,7.42018,4.82662,2.59356],[24,1,7.24569,4.68919,2.55650],[25,1,7.58406,4.98892,2.59514],
+    [26,1,7.36503,4.74981,2.61522],[27,1,6.93374,4.53093,2.40280],[28,1,6.98316,4.58178,2.40138],[29,1,6.99443,4.65275,2.34168],[30,1,6.95329,4.64762,2.30567],
+    [31,1,6.88533,4.69149,2.19384],[32,1,6.67151,4.52279,2.14872],[33,1,6.82462,4.69068,2.13395],[34,1,6.93066,4.70974,2.22093],[35,1,6.49036,4.43759,2.05276],
+    [36,1,6.91162,4.82208,2.08954],[37,1,6.42128,4.47133,1.94995],[38,1,6.48125,4.55603,1.92523],[39,1,6.55069,4.60259,1.94810],[40,1,6.44327,4.48438,1.95889],
+    [41,1,6.27351,4.36875,1.90475],[42,1,6.39353,4.45830,1.93523],[43,1,6.45621,4.50532,1.95088],[44,1,6.57430,4.63292,1.94138],[45,2,6.42302,4.51582,1.90720],
+    [46,2,6.51693,4.65740,1.85954],[47,2,6.21997,4.41205,1.80792],[48,2,6.32784,4.35641,1.97143],[49,2,6.04100,4.23977,1.80123],[50,2,6.27727,4.44027,1.83701],
+    [51,2,6.37080,4.51967,1.85113],[52,2,6.25414,4.34227,1.91188],[53,2,5.94822,4.12073,1.82749],[54,2,6.19468,4.53457,1.66011],[55,2,6.28959,4.43386,1.85573],
+    [56,2,6.04638,4.28778,1.75860],[57,2,5.87584,4.06830,1.80755],[58,2,6.12185,4.18957,1.93228],[59,2,6.09563,4.27649,1.81915],[60,2,6.01367,4.21704,1.79663],
+    [61,2,6.68866,4.52444,2.16422],[62,2,5.89633,3.98636,1.90997],[63,2,6.05790,4.12137,1.93653],[64,2,6.28039,4.31417,1.96622],[65,2,5.83666,4.00391,1.83275],
+    [66,2,6.12260,4.32449,1.79810],[67,3,5.96009,4.13290,1.82719],[68,3,5.97091,4.12512,1.84578],[69,3,5.91052,4.10510,1.80542],[70,3,5.94186,4.14111,1.80074],
+    [71,3,5.87860,4.09076,1.78784],[72,3,6.18421,4.35744,1.82677],[73,3,5.76484,4.02296,1.74188],[74,3,6.38902,4.60736,1.78166],[75,3,6.03102,4.21370,1.81731],
+    [76,3,6.08970,4.39336,1.69635],[77,3,6.28893,4.47282,1.81611],[78,3,5.80536,4.05413,1.75123],[79,3,5.87025,4.16707,1.70317],[80,3,5.71031,3.96766,1.74265],
+    [81,3,5.77932,3.94595,1.83337],[82,3,5.90476,4.12104,1.78373],[83,3,5.79765,4.07436,1.72329],[84,3,5.78039,4.09592,1.68448],[85,3,5.57172,3.91463,1.65709],
+    [86,3,5.67849,3.95888,1.71962],[87,3,6.02485,4.33114,1.69371],[88,3,5.97873,4.34312,1.63561],[89,4,5.50130,3.82045,1.68084],[90,4,5.59286,3.95085,1.64201],
+    [91,4,5.66678,3.92299,1.74379],[92,4,5.85611,4.19105,1.66505],[93,4,5.67510,4.03885,1.63626],[94,4,5.52275,3.85190,1.67086],[95,4,5.64925,3.95384,1.69541],
+    [96,4,6.09792,4.40513,1.69279],[97,4,5.71920,4.01856,1.70064],[98,4,5.56711,3.96703,1.60009],[99,4,5.88619,4.19054,1.69565],[100,4,5.75663,4.06939,1.68724],
+    [101,4,5.77733,4.15260,1.62473],[102,4,5.85106,4.13257,1.71849],[103,4,5.35899,3.71578,1.64321],[104,4,5.51512,3.84798,1.66714],[105,4,5.62632,4.00270,1.62362],
+    [106,4,5.23623,3.70664,1.52959],[107,4,5.81745,4.17655,1.64090],[108,4,5.34453,3.72731,1.61722],[109,4,5.54420,3.89746,1.64674],[110,4,5.39335,3.72365,1.66970]
+  ];
+
+  const W = 640, H = 260;
+  const padL = 34, padR = 40, padT = 12, padB = 26;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const xMin = 1, xMax = 110, yMin = 1.3, yMax = 7.0;
+
+  function xPos(step) { return padL + (step - xMin) / (xMax - xMin) * plotW; }
+  function yPos(v) { return padT + (1 - (v - yMin) / (yMax - yMin)) * plotH; }
+
+  const css = getComputedStyle(document.querySelector('.doc'));
+  const gridColor = css.getPropertyValue('--chart-grid').trim();
+  const inkFaint = css.getPropertyValue('--ink-faint').trim();
+  const seriesText = css.getPropertyValue('--series-text').trim();
+  const seriesAudio = css.getPropertyValue('--series-audio').trim();
+
+  let s = '';
+  [2,3,4,5,6,7].forEach(t => {
+    const y = yPos(t);
+    s += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="${gridColor}" stroke-width="1"/>`;
+    s += `<text x="${padL-7}" y="${y+4}" text-anchor="end" font-size="10.5" fill="${inkFaint}" font-family="Times New Roman, serif">${t}</text>`;
+  });
+  [1,23,45,67,89,110].forEach(st => {
+    const x = xPos(st);
+    s += `<text x="${x}" y="${H-padB+16}" text-anchor="middle" font-size="10.5" fill="${inkFaint}" font-family="Times New Roman, serif">${st}</text>`;
+  });
+  s += `<text x="${W/2}" y="${H-2}" text-anchor="middle" font-size="10.5" fill="${inkFaint}" font-style="italic">training step</text>`;
+
+  function pathFor(idx) {
+    return data.map((d,i) => `${i===0?'M':'L'} ${xPos(d[0]).toFixed(2)} ${yPos(d[idx]).toFixed(2)}`).join(' ');
+  }
+  s += `<path d="${pathFor(3)}" fill="none" stroke="${seriesText}" stroke-width="1.6"/>`;
+  s += `<path d="${pathFor(4)}" fill="none" stroke="${seriesAudio}" stroke-width="1.6"/>`;
+
+  const lastText = data[data.length-1][3], lastAudio = data[data.length-1][4];
+  s += `<circle cx="${xPos(110)}" cy="${yPos(lastText)}" r="2.5" fill="${seriesText}"/>`;
+  s += `<circle cx="${xPos(110)}" cy="${yPos(lastAudio)}" r="2.5" fill="${seriesAudio}"/>`;
+  s += `<text x="${xPos(110)+6}" y="${yPos(lastText)+4}" font-size="11" font-weight="700" fill="${seriesText}" font-family="Times New Roman, serif">${lastText.toFixed(2)}</text>`;
+  s += `<text x="${xPos(110)+6}" y="${yPos(lastAudio)+4}" font-size="11" font-weight="700" fill="${seriesAudio}" font-family="Times New Roman, serif">${lastAudio.toFixed(2)}</text>`;
+
+  data.forEach(d => {
+    s += `<circle class="hoverpt" data-step="${d[0]}" cx="${xPos(d[0])}" cy="${yPos((d[3]+d[4])/2)}" r="8" fill="transparent"/>`;
+  });
+  svg.innerHTML = s;
+
+  const crosshair = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  crosshair.setAttribute('stroke', inkFaint);
+  crosshair.setAttribute('stroke-width', '1');
+  crosshair.setAttribute('stroke-dasharray', '2,3');
+  crosshair.setAttribute('y1', padT);
+  crosshair.setAttribute('y2', H - padB);
+  crosshair.style.display = 'none';
+  svg.appendChild(crosshair);
+
+  const wrap = svg.closest('.chart-wrap');
+  svg.querySelectorAll('.hoverpt').forEach(pt => {
+    pt.addEventListener('mouseenter', () => {
+      const step = pt.getAttribute('data-step');
+      const d = data[step - 1];
+      crosshair.setAttribute('x1', xPos(d[0]));
+      crosshair.setAttribute('x2', xPos(d[0]));
+      crosshair.style.display = 'block';
+      tooltip.innerHTML = `step ${d[0]} &middot; epoch ${d[1]}<br>text ${d[3].toFixed(2)} &middot; audio ${d[4].toFixed(2)}`;
+      tooltip.style.opacity = '1';
+      const rect = svg.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      const scale = rect.width / W;
+      tooltip.style.left = Math.min(rect.left - wrapRect.left + xPos(d[0]) * scale + 10, wrapRect.width - 130) + 'px';
+      tooltip.style.top = (rect.top - wrapRect.top + yPos((d[3]+d[4])/2) * (rect.height / H) - 34) + 'px';
+    });
+    pt.addEventListener('mouseleave', () => { crosshair.style.display = 'none'; tooltip.style.opacity = '0'; });
+  });
+})();
+</script>

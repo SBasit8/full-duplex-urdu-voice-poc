@@ -1,0 +1,29 @@
+Speakers: 80  Segments to build: 2264
+  100/2264  done=100 skip=0 err=0
+  200/2264  done=200 skip=0 err=0
+  300/2264  done=300 skip=0 err=0
+  400/2264  done=400 skip=0 err=0
+  500/2264  done=500 skip=0 err=0
+  600/2264  done=600 skip=0 err=0
+  700/2264  done=700 skip=0 err=0
+  800/2264  done=800 skip=0 err=0
+  900/2264  done=900 skip=0 err=0
+  1000/2264  done=1000 skip=0 err=0
+  1100/2264  done=1100 skip=0 err=0
+  1200/2264  done=1200 skip=0 err=0
+  1300/2264  done=1300 skip=0 err=0
+  1400/2264  done=1400 skip=0 err=0
+  1500/2264  done=1500 skip=0 err=0
+  1600/2264  done=1600 skip=0 err=0
+  1700/2264  done=1700 skip=0 err=0
+  1800/2264  done=1800 skip=0 err=0
+  1900/2264  done=1900 skip=0 err=0
+  2000/2264  done=2000 skip=0 err=0
+  2100/2264  done=2100 skip=0 err=0
+  2200/2264  done=2200 skip=0 err=0
+  2264/2264  done=2264 skip=0 err=0
+Building manifest...
+
+=== DONE ===
+Segments: 2264   Total: 57.14 hr
+Manifest: /home/ubuntu/vs_code/moshi_urdu /training_data/stitched_cv/manifest.tsv

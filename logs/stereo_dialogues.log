@@ -1,0 +1,46 @@
+Pairs: 40  (MF: 14, XX: 26)
+Building dialogues...
+  pair 1/40  dialogues so far: 23  audio: 0.63 hr
+  pair 2/40  dialogues so far: 46  audio: 1.28 hr
+  pair 3/40  dialogues so far: 72  audio: 2.00 hr
+  pair 4/40  dialogues so far: 104  audio: 2.90 hr
+  pair 5/40  dialogues so far: 137  audio: 3.82 hr
+  pair 6/40  dialogues so far: 171  audio: 4.77 hr
+  pair 7/40  dialogues so far: 208  audio: 5.81 hr
+  pair 8/40  dialogues so far: 256  audio: 7.17 hr
+  pair 9/40  dialogues so far: 289  audio: 8.09 hr
+  pair 10/40  dialogues so far: 319  audio: 8.95 hr
+  pair 11/40  dialogues so far: 359  audio: 10.09 hr
+  pair 12/40  dialogues so far: 388  audio: 10.90 hr
+  pair 13/40  dialogues so far: 413  audio: 11.59 hr
+  pair 14/40  dialogues so far: 453  audio: 12.71 hr
+  pair 15/40  dialogues so far: 481  audio: 13.47 hr
+  pair 16/40  dialogues so far: 535  audio: 14.99 hr
+  pair 17/40  dialogues so far: 580  audio: 16.27 hr
+  pair 18/40  dialogues so far: 609  audio: 17.07 hr
+  pair 19/40  dialogues so far: 611  audio: 17.11 hr
+  pair 20/40  dialogues so far: 675  audio: 18.91 hr
+  pair 21/40  dialogues so far: 703  audio: 19.68 hr
+  pair 22/40  dialogues so far: 725  audio: 20.28 hr
+  pair 23/40  dialogues so far: 750  audio: 20.97 hr
+  pair 24/40  dialogues so far: 799  audio: 22.33 hr
+  pair 25/40  dialogues so far: 822  audio: 22.97 hr
+  pair 26/40  dialogues so far: 841  audio: 23.51 hr
+  pair 27/40  dialogues so far: 885  audio: 24.76 hr
+  pair 28/40  dialogues so far: 908  audio: 25.40 hr
+  pair 29/40  dialogues so far: 949  audio: 26.57 hr
+  pair 30/40  dialogues so far: 983  audio: 27.52 hr
+  pair 31/40  dialogues so far: 1012  audio: 28.33 hr
+  pair 32/40  dialogues so far: 1039  audio: 29.08 hr
+  pair 33/40  dialogues so far: 1070  audio: 29.96 hr
+  pair 34/40  dialogues so far: 1107  audio: 31.00 hr
+  pair 35/40  dialogues so far: 1132  audio: 31.69 hr
+  pair 36/40  dialogues so far: 1200  audio: 33.61 hr
+  pair 37/40  dialogues so far: 1228  audio: 34.39 hr
+  pair 38/40  dialogues so far: 1282  audio: 35.92 hr
+  pair 39/40  dialogues so far: 1306  audio: 36.60 hr
+  pair 40/40  dialogues so far: 1367  audio: 38.33 hr
+
+=== DONE ===
+Pairs: 40   Dialogues: 1367   Total: 38.33 hr
+Manifest: /home/ubuntu/vs_code/moshi_urdu /training_data/stereo_dialogues_cv/manifest.tsv

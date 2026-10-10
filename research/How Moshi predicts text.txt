@@ -1,0 +1,131 @@
+ How Moshi predicts text and audio together                                                                                                                             
+   
+  At every frame (every 80 ms = 12.5 Hz), the model emits 9 things in parallel:                                                                                          
+                  
+  Frame T:                                                                                                                                                               
+     text_token         ← 1 token from 32k Urdu vocabulary (or padding)
+     audio_code_lvl_0   ← 1 token from Mimi's first codebook (semantic info)                                                                                             
+     audio_code_lvl_1   ← 1 token from Mimi's second codebook (acoustic detail)                                                                                          
+     ...                                                                                                                                                                 
+     audio_code_lvl_7   ← 1 token from Mimi's 8th codebook (fine acoustic detail)                                                                                        
+                                                                                                                                                                         
+  These 9 outputs are predicted by two transformers stacked together:                                                                                                    
+                                                                                                                                                                         
+                      ┌─────────────────────────────┐                                                                                                                    
+                      │   Temporal Transformer      │
+  Input frames    →   │   (the big "main" model)    │   →   hidden state                                                                                                 
+                      │   processes seq across time │                                                                                                                    
+                      └──────────────┬──────────────┘                                                                                                                    
+                                     │                                                                                                                                   
+                                     ↓                                                                                                                                   
+                      ┌─────────────────────────────┐
+                      │   Depth Transformer         │                                                                                                                    
+                      │   predicts the 9 outputs    │   →   text + 8 audio
+                      │   (text first, then audio)  │       codes for this frame                                                                                         
+                      └─────────────────────────────┘                                                                                                                    
+                                                                                                                                                                         
+  The Depth Transformer is what enforces alignment. It predicts the text token FIRST, then conditions all 8 audio codebook predictions on that text token. So in theory, 
+  the audio for frame T is "told" what word the model thinks it's saying.
+                                                                                                                                                                         
+  What "alignment" should look like ideally
+
+  If the model is well-trained, at frame 50 (say 4 sec in), you'd see:                                                                                                   
+  - text_token = "مالس" (the word "hello" in Urdu)
+  - audio_codes = encode the sounds of saying "مالس"                                                                                                                     
+                                                    
+  If you decode the audio, you'd hear "مالس". If you decode the text, you'd read "مالس". They match.    
+  
+  
+  Why our model's text and audio don't match                                                                                                                             
+                                                                                                                                                                         
+  Several things compound:                                                                                                                                               
+  
+  1. Text supervision is extremely sparse                                                                                                                                
+                  
+  Look at the format we trained on (per dialogue):                                                                                                                       
+  Frame:        0    1    2    3    4    5    6    7   ...   100  101  ...  150  ...
+  Text:        [3,   3,   3,   0,   42,  3,   3,   3,  ...,   3,   0,  ...,  31,  ...]                                                                                   
+                ↑    ↑    ↑    ↑    ↑                              ↑                                                                                                     
+                pad  pad  pad  end  word "مالس"                   word "پآ"                                                                                              
+                                                                                                                                                                         
+  Token 3 = padding (silence frames). Token 0 = end-of-text marker. Real word tokens (like 42, 31) only appear at the exact frames where words START.                    
+                                                                                                                                                                         
+  Out of ~1500 frames per dialogue, only ~50-100 are real word tokens. The rest is padding.                                                                              
+                                                                                                                                                                         
+  So the model sees:                                                                                                                                                     
+  - ~95% of frames: "predict pad/end-of-text" (boring, easy to learn)
+  - ~5% of frames: "predict the right Urdu word" (hard, where actual learning happens)                                                                                   
+                                                                                      
+  This sparse supervision means the text stream gets ~20× less effective training signal per epoch than the audio stream (which has a meaningful target at every frame). 
+                                                                                                                                                                         
+  2. We re-initialized text embeddings from scratch                                                                                                                      
+                                                                                                                                                                         
+  When we ran init_moshi_for_ft.py --init_text_embeddings, we wiped the text embedding table (32K rows × ~4096 dims = ~130M parameters of Urdu word meanings). The model 
+  must relearn:
+  - "Token ID 47 means the sound 'فلا' (alif)"                                                                                                                           
+  - "Token ID 1283 means the word 'ناتسکاپ'"                                                                                                                             
+  - "Token ID 9412 means the morpheme 'ےہ'" 
+                                                                                                                                                                         
+  All from scratch. With only 250K real word occurrences in 38 hrs, each token is seen on average ~8 times during training — barely enough to memorize, let alone        
+  generalize.                                                                                                                                                            
+                                                                                                                                                                         
+  For comparison: Kyutai's original English Moshi learned its text embeddings over hundreds of millions of word occurrences across thousands of hours.                   
+                  
+  3. Audio codebooks were retained, not reset                                                                                                                            
+                  
+  We kept Kyutai's audio codebook embeddings. So the model started training with strong audio knowledge already (the 8 Mimi codebooks were working from frame 0). The    
+  text side started at random.
+                                                                                                                                                                         
+  This creates an asymmetry:                                                                                                                                             
+  - Audio: 5 epochs of fine-tuning on top of strong base = decent quality
+  - Text: 5 epochs of training from scratch = poor quality                                                                                                               
+                  
+  4. The two streams are weakly coupled in early training                                                                                                                
+                  
+  In theory, the Depth Transformer makes audio condition on text. In practice, when text predictions are mostly random (early training), the audio side learns to ignore 
+  the text input and just predict from the temporal context alone.
+                                                                                                                                                                         
+  This is bad: it means audio and text become decoupled. Even when text starts to improve later, audio is already stuck in a "I don't trust the text" pattern.           
+  
+  Why this improves with more training (the recovery path)                                                                                                               
+                  
+  Architecture is sound — it's purely a data/training issue                                                                                                              
+                  
+  Moshi's design (joint prediction + Depth Transformer + delay pattern) is correct. Given enough training:                                                               
+                  
+  Epochs 1-5:    Text mostly random.      Audio uses temporal context only.    DECOUPLED                                                                                 
+  Epochs 5-15:   Text starts to learn     Audio still mostly ignoring text.    PARTIAL                                                                                   
+                 common Urdu words.                                                                                                                                      
+  Epochs 15-30:  Text gets coherent.      Audio starts to use text again       COUPLING                                                                                  
+                                          (because text is informative now).                                                                                             
+  Epochs 30+:    Text high quality.       Audio strongly conditioned on text.  ALIGNED                                                                                   
+                                                                                                                                                                         
+  The "decoupled" → "aligned" transition is where the magic happens. It typically requires:                                                                              
+  - Text loss to drop below ~3.0                                                                                                                                         
+  - Many epochs of joint optimization                                                                                                                                    
+  - Sufficient data variety          
+                                                                                                                                                                         
+  In your case (text loss = 3.75 at epoch 5):
+  - You're in late "decoupled" / early "partial" zone                                                                                                                    
+  - Text is starting to make sense (real Urdu words emerge!)                                                                                                             
+  - But audio hasn't caught up to using it                                                                                                                               
+                                                                                                                                                                         
+ 
+  
+
+  
+  
+  The alignment problem    :                                                                                                                       
+                                                                                                                                                                         
+  This is a known phenomenon in multimodal models:                                                                                                                       
+  - Text and audio have very different statistical properties (text is sparse + discrete word events; audio is dense + continuous evolution)
+  - They learn at different rates                                                                                                                                        
+  - Early in training, they're mostly independent
+  - A "phase transition" happens later when they become strongly coupled                                                                                                 
+  - Models trained too briefly are stuck in the "independent" phase     
+                                                                                                                                                                         
+  J-Moshi explicitly mentions this in their paper — they had to train for ~36 hours on 128 V100s (= ~4600 GPU-hours) for the streams to fully align.                     
+                                                                                                                                                                         
+  You did ~3 hours on 2 GPUs (= 6 GPU-hours). You're at ~0.13% of J-Moshi's training compute. So expecting full alignment is unrealistic — but the fact that you see real
+  Urdu words in the text stream is itself a strong signal that the architecture is working as intended.                                                                 
+

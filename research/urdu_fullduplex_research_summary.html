@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Urdu Full-Duplex Voice AI — Research & Roadmap Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --bg2: #EDEAE3;
+  --bg3: #E2DED5;
+  --ink: #1A1814;
+  --ink2: #4A4840;
+  --ink3: #7A7870;
+  --accent: #C4420A;
+  --accent2: #E86030;
+  --teal: #0A6B5C;
+  --teal2: #D4EDE9;
+  --amber: #8A5A00;
+  --amber2: #FFF0CC;
+  --purple: #4A3080;
+  --purple2: #EAE5F5;
+  --border: rgba(26,24,20,0.1);
+  --border2: rgba(26,24,20,0.18);
+  --sans: 'Syne', sans-serif;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* PRINT */
+@media print {
+  body{background:#fff;font-size:11pt}
+  .no-print{display:none}
+  .section{break-inside:avoid}
+  .phase-card{break-inside:avoid}
+}
+
+/* LAYOUT */
+.page{max-width:960px;margin:0 auto;padding:40px 32px 80px}
+
+/* HEADER */
+.header{
+  border-bottom:2px solid var(--ink);
+  padding-bottom:28px;
+  margin-bottom:40px;
+}
+.header-label{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.header h1{
+  font-family:var(--sans);
+  font-size:34px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.1;
+  letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.header h1 span{color:var(--accent)}
+.header-sub{
+  font-family:var(--serif);
+  font-size:15px;
+  color:var(--ink2);
+  font-style:italic;
+}
+.header-meta{
+  display:flex;
+  gap:24px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+.meta-chip{
+  font-family:var(--sans);
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.06em;
+  padding:4px 12px;
+  border-radius:99px;
+  border:1px solid var(--border2);
+  color:var(--ink2);
+  background:var(--bg2);
+}
+
+/* NAV */
+.nav{
+  display:flex;
+  gap:0;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  overflow:hidden;
+  margin-bottom:36px;
+  background:var(--bg2);
+}
+.nav-btn{
+  flex:1;
+  padding:10px 8px;
+  font-family:var(--sans);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  border:none;
+  border-right:1px solid var(--border);
+  background:transparent;
+  color:var(--ink2);
+  cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.nav-btn:last-child{border-right:none}
+.nav-btn.active{background:var(--ink);color:#fff}
+.nav-btn:hover:not(.active){background:var(--bg3)}
+
+/* PANELS */
+.panel{display:none}
+.panel.show{display:block}
+
+/* SECTION */
+.section{margin-bottom:40px}
+.section-header{
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  margin-bottom:18px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border2);
+}
+.section-num{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--accent);
+  flex-shrink:0;
+}
+.section-title{
+  font-family:var(--sans);
+  font-size:16px;
+  font-weight:600;
+  color:var(--ink);
+}
+
+/* CARDS */
+.card-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px 18px;
+  position:relative;
+}
+.card.accent-left{border-left:3px solid var(--accent)}
+.card.accent-teal{border-left:3px solid var(--teal)}
+.card.accent-purple{border-left:3px solid var(--purple)}
+.card.accent-amber{border-left:3px solid var(--amber)}
+.card.full{grid-column:1/-1}
+.card-label{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.card.accent-left .card-label{color:var(--accent)}
+.card.accent-teal .card-label{color:var(--teal)}
+.card.accent-purple .card-label{color:var(--purple)}
+.card.accent-amber .card-label{color:var(--amber)}
+.card-body{
+  font-size:13.5px;
+  color:var(--ink2);
+  line-height:1.7;
+}
+.card-body strong{color:var(--ink);font-weight:600}
+.card-body em{color:var(--ink3);font-style:italic}
+
+/* INSIGHT BOX */
+.insight{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-left:4px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  padding:14px 18px;
+  margin:16px 0;
+  font-size:13.5px;
+  color:var(--ink2);
+  line-height:1.7;
+}
+.insight strong{color:var(--ink);font-weight:600}
+.insight.teal{border-left-color:var(--teal);background:var(--teal2)}
+.insight.amber{border-left-color:var(--amber);background:var(--amber2)}
+.insight.purple{border-left-color:var(--purple);background:var(--purple2)}
+
+/* STAT ROW */
+.stat-row{
+  display:flex;
+  gap:10px;
+  margin:14px 0;
+  flex-wrap:wrap;
+}
+.stat{
+  flex:1;
+  min-width:100px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px 14px;
+  text-align:center;
+}
+.stat-val{
+  font-family:var(--sans);
+  font-size:22px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.1;
+  display:block;
+}
+.stat-unit{font-size:12px;color:var(--ink3)}
+.stat-lbl{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  margin-top:4px;
+  display:block;
+}
+
+/* TABLE */
+.tbl-wrap{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  margin:14px 0;
+}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{
+  padding:9px 14px;
+  text-align:left;
+  font-family:var(--sans);
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink3);
+  background:var(--bg3);
+  border-bottom:1px solid var(--border2);
+}
+.tbl td{
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+  color:var(--ink2);
+  vertical-align:top;
+  line-height:1.55;
+}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(26,24,20,.03)}
+.tbl td:first-child{color:var(--ink);font-weight:500}
+.good{color:var(--teal);font-weight:600}
+.bad{color:var(--accent);font-weight:600}
+.mid{color:var(--amber);font-weight:600}
+
+/* PHASE CARDS */
+.phase-track{position:relative;padding-left:28px;margin-top:8px}
+.phase-track::before{
+  content:'';
+  position:absolute;
+  left:8px;top:16px;
+  width:1.5px;
+  height:calc(100% - 32px);
+  background:linear-gradient(180deg,var(--accent) 0%,var(--border2) 100%);
+}
+.phase-card{
+  position:relative;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px 18px;
+  margin-bottom:14px;
+}
+.phase-card::before{
+  content:'';
+  position:absolute;
+  left:-22px;top:16px;
+  width:10px;height:10px;
+  border-radius:50%;
+  border:2px solid var(--accent);
+  background:var(--bg);
+}
+.phase-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.phase-tag{
+  font-family:var(--sans);
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:3px 9px;
+  border-radius:99px;
+}
+.tag-r{background:#F5E8E3;color:var(--accent)}
+.tag-g{background:var(--teal2);color:var(--teal)}
+.tag-b{background:var(--purple2);color:var(--purple)}
+.tag-a{background:var(--amber2);color:var(--amber)}
+.phase-title{
+  font-family:var(--sans);
+  font-size:14px;
+  font-weight:600;
+  color:var(--ink);
+}
+.phase-time{
+  font-family:var(--sans);
+  font-size:10px;
+  color:var(--ink3);
+  margin-left:auto;
+}
+.phase-body{font-size:13.5px;color:var(--ink2);line-height:1.7}
+.phase-body strong{color:var(--ink);font-weight:600}
+
+/* STEP LIST */
+.steps{list-style:none;padding:0;margin:10px 0 0}
+.steps li{
+  position:relative;
+  padding:6px 0 6px 22px;
+  font-size:13px;
+  color:var(--ink2);
+  line-height:1.6;
+  border-bottom:1px dashed var(--border);
+}
+.steps li:last-child{border-bottom:none}
+.steps li::before{
+  content:attr(data-n);
+  position:absolute;
+  left:0;top:7px;
+  font-family:var(--sans);
+  font-size:9px;
+  font-weight:700;
+  color:var(--accent);
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1.5px solid var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  text-align:center;
+  padding-left:1px;
+}
+.steps li strong{color:var(--ink);font-weight:600}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+
+/* PILL ROW */
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.pill{
+  font-family:var(--sans);
+  font-size:11px;
+  font-weight:600;
+  padding:4px 11px;
+  border-radius:99px;
+  border:1px solid var(--border2);
+  color:var(--ink2);
+  background:var(--bg);
+}
+.pill.r{background:#F5E8E3;border-color:#E8C0B0;color:var(--accent)}
+.pill.g{background:var(--teal2);border-color:#A0D8D0;color:var(--teal)}
+.pill.b{background:var(--purple2);border-color:#C0B0E0;color:var(--purple)}
+
+/* FOOTER */
+.footer{
+  margin-top:48px;
+  padding-top:16px;
+  border-top:1px solid var(--border2);
+  font-family:var(--sans);
+  font-size:10.5px;
+  color:var(--ink3);
+  line-height:1.8;
+}
+.footer a{color:var(--ink2);text-decoration:none}
+.footer a:hover{color:var(--accent)}
+
+@media(max-width:640px){
+  .card-grid,.two-col{grid-template-columns:1fr}
+  .card.full{grid-column:1}
+  .header h1{font-size:26px}
+  .nav-btn{font-size:9px;padding:8px 4px}
+  .stat-row{gap:6px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-label">Research & Roadmap Summary · Two-Week Study</div>
+  <h1>Building a Natural Urdu<br><span>Full-Duplex Voice AI</span></h1>
+  <div class="header-sub">From architecture research to phased build plan — what we studied, what we found, and how we proceed</div>
+  <div class="header-meta">
+    <span class="meta-chip">Based on: Moshi · PersonaPlex · J-Moshi</span>
+    <span class="meta-chip">Target: Pakistani Urdu conversational AI</span>
+    <span class="meta-chip">Goal: Natural, non-robotic full-duplex speech</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav no-print">
+  <button class="nav-btn active" onclick="show('research')">Part 1 — Research</button>
+  <button class="nav-btn" onclick="show('urdu')">Part 2 — Urdu Challenges</button>
+  <button class="nav-btn" onclick="show('data')">Part 3 — Data Problem</button>
+  <button class="nav-btn" onclick="show('roadmap')">Part 4 — Roadmap</button>
+</div>
+
+<!-- ═══════════════ PANEL 1: RESEARCH ═══════════════ -->
+<div class="panel show" id="research">
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <span class="section-title">What is full-duplex and why it matters</span>
+  </div>
+  <div class="insight">
+    Every voice assistant you have ever used — Siri, Google Assistant, ChatGPT Voice — uses a <strong>pipeline architecture</strong>: it listens → transcribes → thinks → speaks. It cannot do both at once. This creates a half-second or more of awkward silence after you stop talking, and it completely ignores you while it is speaking. <strong>Full-duplex</strong> means the model listens and speaks simultaneously, every 80 milliseconds — exactly like a real human.
+  </div>
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Pipeline (old way)</div>
+      <div class="card-body">ASR → LLM → TTS running sequentially. 500–900ms latency. Cannot hear you while speaking. <strong>Turn-taking is a rule, not a learned behaviour.</strong> All commercial voice agents today use this.</div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">Full-duplex (new way)</div>
+      <div class="card-body">Single model processes both audio streams simultaneously. 160–200ms latency. Can detect interruptions, produce backchannels, overlap naturally. <strong>Turn-taking emerges from training, not rules.</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-title">Moshi — the foundation model we are building on</span>
+  </div>
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Architecture</div>
+      <div class="card-body">
+        <strong>Mimi codec</strong> — converts 24kHz audio to discrete tokens at 12.5Hz, 1.1 kbps. Uses RVQ with 8 codebooks. Codebook 1 carries semantic meaning (WavLM distilled).<br><br>
+        <strong>Helium 7B LLM</strong> — transformer backbone pre-trained on 2.1T tokens. Processes three streams simultaneously: agent text (Inner Monologue), agent audio, user audio.<br><br>
+        <strong>Depth Transformer</strong> — small model filling audio codebooks 2–8 per step.<br><br>
+        <strong>Inner Monologue</strong> — text tokens generated before audio tokens. Hidden from user. Improved spoken QA from 9% → 26.6%.
+      </div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">Moshi TTS — built from scratch</div>
+      <div class="card-body">
+        Kyutai built their own TTS because no existing system could produce the training data format Moshi needs — <strong>two speakers on separate channels simultaneously</strong>.<br><br>
+        <strong>1.6B parameters</strong> (1B backbone + 600M depth transformer). Trained on 2.5M hours of public audio. Fine-tuned on 170 hours of Kyutai-recorded stereo conversations. Uses <strong>Delayed Streams Modeling (DSM)</strong> — text runs 1.28 seconds ahead of audio so the model has lookahead before it speaks. Output: left channel = agent, right channel = user. Produced <strong>20,000+ hours</strong> of synthetic stereo Urdu training data for Moshi.<br><br>
+        <em>Later open-sourced as kyutai/tts-1.6b-en_fr (July 2025). WER 2.82% EN.</em>
+      </div>
+    </div>
+    <div class="card accent-purple full">
+      <div class="card-label">Why Moshi TTS is the only multi-stream TTS that exists</div>
+      <div class="card-body">
+        Single-speaker TTS had decades of professional voice recordings to train on. Multi-stream TTS had <strong>almost no training data anywhere in the world</strong> in the required format (one speaker per channel). It also required a new codec (Mimi) and a new architecture (DSM) that nobody had built before. Kyutai spent years building all three from scratch — the codec, the architecture, and 170 hours of their own recorded corpus — before the system could exist at all. <strong>Dia by Nari Labs</strong> (2025) generates joint two-speaker dialogue but outputs a blended single file, not separated channels. Kyutai TTS is the only system that produces true separated stereo.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-title">PersonaPlex — what improved on Moshi and how</span>
+  </div>
+  <div class="insight teal">
+    PersonaPlex (NVIDIA, arXiv:2602.06053, ICASSP 2026) fine-tuned Moshi with <strong>zero architectural changes</strong> — only training data changes. It went from Moshi's DMOS 3.11 to <strong>DMOS 3.90</strong>, the highest score of any full-duplex model tested, beating Gemini (3.72) and Qwen2.5-Omni (3.70).
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Problem it solved</div>
+      <div class="card-body">Moshi yielded the floor to <strong>everything</strong> — backchannels ("mm-hmm"), pauses, any sound at all. Pause TOR 98%, Backchannel TOR 100%. It could not distinguish a real interruption from a filler sound. PersonaPlex taught it the difference.</div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">Data strategy (not purely synthetic)</div>
+      <div class="card-body">~2,250 hours synthetic dialogue (Chatterbox + Dia TTS, scripts from Qwen3-32B) <strong>plus</strong> 1,217 hours of real Fisher corpus conversations (7,303 two-speaker phone calls with separate channels). <strong>Synthetic → task adherence. Fisher real data → naturalness, backchanneling, emotional expression.</strong></div>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-label">Negative silence — the barge-in trick</div>
+      <div class="card-body">Chatterbox generates one speaker at a time (mono). PersonaPlex stitched agent turns onto the left channel and user turns onto the right channel. Then applied <strong>negative duration silence</strong> — placing the next turn backwards in time so it overlaps with the previous one. This created synthetic barge-in examples. The model learned: user audio appearing on right channel while agent is speaking = stop speaking.</div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-label">Role conditioning via text prompts</div>
+      <div class="card-body">Added a system prompt prepended to each conversation: <em>"You are Ayelen Lucero from CitySan Services."</em> The model learned to condition its persona, voice, and behaviour on this text. Enabled voice cloning (SSIM 0.10 → 0.57) and role adherence without changing any model weights.</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap" style="margin-top:16px">
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th>Moshi baseline</th><th>PersonaPlex experimental</th><th>PersonaPlex released</th></tr></thead>
+      <tbody>
+        <tr><td>Pause TOR ↓</td><td class="bad">0.985</td><td class="mid">0.584</td><td class="good">0.358</td></tr>
+        <tr><td>Backchannel TOR ↓</td><td class="bad">1.000</td><td class="mid">0.327</td><td class="good">0.273</td></tr>
+        <tr><td>User Interruption GPT-4o ↑</td><td class="bad">0.765</td><td class="good">4.210</td><td class="good">4.290</td></tr>
+        <tr><td>Interruption latency ↓</td><td class="mid">0.257s</td><td class="bad">0.400s</td><td class="good">0.240s</td></tr>
+        <tr><td>Dialog naturalness DMOS ↑</td><td class="bad">3.11</td><td class="good">3.90</td><td>—</td></tr>
+        <tr><td>Training compute</td><td>—</td><td colspan="2" class="good">6 hours on 8× A100</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <span class="section-title">The synthetic vs real data finding — the most important result</span>
+  </div>
+  <div class="insight amber">
+    <strong>Moshi's own paper states:</strong> simulated multi-stream data where the inactive speaker channel is perfectly silent "is far from being sufficient to capture natural conversations." Text-based instruct datasets were "ill-suited" because they contained URLs and bullet points that "do not follow a natural oral flow." Even 20,000 hours of synthetic data was not enough — Moshi still needed ~2,000 hours of real Fisher conversations for multi-stream fine-tuning.
+  </div>
+  <div class="card-grid">
+    <div class="card accent-amber">
+      <div class="card-label">What synthetic data gives you</div>
+      <div class="card-body">Task diversity, domain coverage, volume at scale, role adherence, voice cloning conditioning. <strong>Good for teaching the model what to say.</strong></div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">What only real data gives you</div>
+      <div class="card-body">Natural overlapping speech, contextually appropriate backchannels, real disfluencies, emotional prosody variation, authentic silence. <strong>Essential for teaching the model how to speak like a human.</strong></div>
+    </div>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><span class="stat-val">~2.5</span><span class="stat-unit">DMOS</span><span class="stat-lbl">Synthetic only (estimated)</span></div>
+    <div class="stat"><span class="stat-val">~3.3</span><span class="stat-unit">DMOS</span><span class="stat-lbl">+50h real data</span></div>
+    <div class="stat"><span class="stat-val">~3.7</span><span class="stat-unit">DMOS</span><span class="stat-lbl">+200h real data</span></div>
+    <div class="stat"><span class="stat-val">3.90</span><span class="stat-unit">DMOS</span><span class="stat-lbl">PersonaPlex (+1,217h Fisher)</span></div>
+  </div>
+</div>
+
+</div><!-- end research panel -->
+
+<!-- ═══════════════ PANEL 2: URDU ═══════════════ -->
+<div class="panel" id="urdu">
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <span class="section-title">Why Urdu is harder than English — specific challenges</span>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><span class="stat-val">~300h</span><span class="stat-unit"></span><span class="stat-lbl">Total public Urdu speech data</span></div>
+    <div class="stat"><span class="stat-val">60,000h</span><span class="stat-unit"></span><span class="stat-lbl">English equivalent (LibriSpeech alone = 1,000h)</span></div>
+    <div class="stat"><span class="stat-val">27%</span><span class="stat-unit">WER</span><span class="stat-lbl">Best Urdu ASR (vs &lt;5% English)</span></div>
+    <div class="stat"><span class="stat-val">4.2</span><span class="stat-unit">MOS</span><span class="stat-lbl">Best Urdu TTS (vs 4.5+ English)</span></div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Nastaliq script</div>
+      <div class="card-body">Cursive Perso-Arabic script. No spaces between words, false spaces within compounds. Short vowels (zabar/zer/pesh) omitted in writing — massive pronunciation ambiguity. Multilingual tokenizers need <strong>2–3× more tokens per word</strong> vs English due to Latin-dominant vocabularies. Custom BPE tokenizer (Unicode U+0600–U+06FF) needed.</div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">Code-switching (Urdish)</div>
+      <div class="card-body">Pakistani educated speakers mix Urdu and English mid-sentence naturally: <em>"Aap ka plan kya hai, basically target kya kar rahe hain?"</em> This is not an edge case — it is the default mode of urban speech. <strong>No TTS system handles Urdu-English code-switching natively.</strong> No code-switching dataset exists for Urdu.</div>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-label">Regional dialect variation</div>
+      <div class="card-body">Karachi Muhajir Urdu (Gujarati influence), Lahori Urdu (Punjabi substrate), Peshawari Urdu (Pashto influence), Hyderabadi Urdu. Different prosody, vowel quality, intonation patterns per region. Finding monolingual Urdu speakers in Pakistan is itself difficult — virtually all speakers are bilingual.</div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-label">Conversational features</div>
+      <div class="card-body">Urdu backchannels: <em>ji</em> (acknowledgment/respect/affirmation), <em>haan</em> (continuer), <em>achha</em> (surprise/understanding), <em>theek hai</em> (agreement), <em>bilkul</em> (emphasis). Three-tier honorific pronoun system (aap/tum/tu) changes verb conjugation. Wrong register = offensive, not just unnatural.</div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>Key gap:</strong> No full-duplex conversational system exists for Urdu. No channel-separated Urdu conversation dataset exists anywhere. No production-quality open-source Urdu TTS exists. No efficient Urdu LLM tokenizer designed for conversational use exists. Building this system would produce the first of all four.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <span class="section-title">Notable Urdu speech research — what already exists</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Work</th><th>What they did</th><th>Key result</th><th>Relevance to us</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>MDPI 2024<br><em>Tacotron2 + voice cloning</em></td>
+          <td>Built Urdu TTS using Tacotron2 with voice cloning on 100+ hours of Urdu audio. Used Nemrah Ahmed audiobook recordings as data source.</td>
+          <td class="good">MOS 4.2 — best Urdu TTS quality reported publicly</td>
+          <td>Proves 100h of dedicated Urdu audio can produce MOS 4.2. Sets our TTS quality target.</td>
+        </tr>
+        <tr>
+          <td>KICS/UET Lahore<br><em>Interspeech 2025</em></td>
+          <td>20-hour studio corpus (10h male + 10h female, 48kHz, 8,081 utterances/gender), 184K phonetic lexicon.</td>
+          <td class="good">WER 13.1% vs Meta MMS 25.6%</td>
+          <td>Dedicated small Urdu corpus dramatically outperforms large multilingual models. Confirms our approach of building dedicated data over using existing multilingual systems.</td>
+        </tr>
+        <tr>
+          <td>J-Moshi<br><em>Japanese Moshi adaptation</em></td>
+          <td>Adapted Moshi to Japanese using nu-dialogue/moshi-finetune. 69,000h Japanese pre-training + 344h real stereo fine-tuning + 602h synthetic.</td>
+          <td class="mid">Below re-synthesis and ground truth. "Quality ceiling for low-resource languages substantially below English."</td>
+          <td>Proves the moshi-finetune pipeline works for non-English. Proves Mimi codec generalises across languages without retraining. Confirms that real stereo data is essential even at small scale.</td>
+        </tr>
+        <tr>
+          <td>Mozilla Common Voice Urdu</td>
+          <td>Crowd-sourced read speech.</td>
+          <td>~60–120h, variable quality</td>
+          <td>Tokenizer pre-training only. Not conversational, not usable for full-duplex training directly.</td>
+        </tr>
+        <tr>
+          <td>CSaLT Conversational Urdu</td>
+          <td>First conversational Urdu ASR benchmark dataset.</td>
+          <td>Small but genuinely conversational</td>
+          <td>Most relevant public source for conversational Urdu patterns.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <span class="section-title">TTS options for Urdu synthetic data generation</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>System</th><th>Urdu support</th><th>Code-switching</th><th>License</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Azure Neural TTS<br>(AsadNeural / UzmaNeural)</td><td class="good">Native ur-PK, 2 voices</td><td class="good">SSML &lt;lang&gt; tag</td><td>Proprietary API</td><td class="good">Best for bootstrapping Phase 1–2</td></tr>
+        <tr><td>Google Cloud TTS<br>(ur-PK-WaveNet)</td><td class="good">Native ur-PK</td><td class="mid">Limited</td><td>Proprietary API</td><td>Supplementary source</td></tr>
+        <tr><td>Chatterbox Multilingual<br>(Resemble AI)</td><td class="bad">No (Hindi yes)</td><td>Via fine-tune</td><td class="good">MIT open source</td><td>Fine-tune from Hindi — fastest path to custom open-source Urdu TTS</td></tr>
+        <tr><td>CosyVoice 2<br>(Alibaba)</td><td class="bad">No native</td><td>Via fine-tune</td><td class="good">Apache 2.0</td><td>Strong multilingual base, Phase 3–4 custom TTS</td></tr>
+        <tr><td>Kyutai DSM TTS</td><td class="bad">EN/FR only</td><td>Via fine-tune</td><td class="good">CC-BY 4.0</td><td>Architecturally ideal (native separated stereo) but heavy adaptation</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- end urdu panel -->
+
+<!-- ═══════════════ PANEL 3: DATA ═══════════════ -->
+<div class="panel" id="data">
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <span class="section-title">Audio formats — what training actually needs</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Standard TTS output</div>
+      <div class="card-body"><strong>Mono audio</strong> — one speaker, one waveform. Azure, Google, ElevenLabs all produce this. No second speaker. To create stereo training data you must generate each speaker separately then stitch them onto separate channels manually (PersonaPlex method).</div>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-label">Kyutai TTS output</div>
+      <div class="card-body"><strong>Separated stereo</strong> — two simultaneous streams, one speaker per channel. Left = agent, right = user. When agent speaks, right channel is silent. When user speaks, left channel is silent. This is the exact format moshi-finetune requires. No stitching step needed.</div>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-label">Dia TTS output</div>
+      <div class="card-body"><strong>Blended stereo</strong> — both speakers mixed into one track. Same conversation as separated stereo, but acoustically combined. Natural timing and overlaps, but the voices cannot be separated. Still requires diarization before it can be used for full-duplex training.</div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-label">PersonaPlex stitching output</div>
+      <div class="card-body"><strong>Manually separated stereo</strong> — agent mono files placed on left channel, user mono files placed on right channel, with negative silence overlaps inserted at barge-in points. Produces the same format as Kyutai TTS but built manually from single-speaker TTS outputs. Clean separation by construction — no diarization needed.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <span class="section-title">The real data problem — why natural recordings are hard to use</span>
+  </div>
+
+  <div class="insight">
+    A real phone call, podcast, or interview is almost always a <strong>single mono or blended stereo file</strong> where both voices are physically mixed into the same waveform. You cannot cut Speaker A out. It is like mixing red and blue paint — you cannot scoop the red out again.
+  </div>
+
+  <div class="card-grid">
+    <div class="card accent-left">
+      <div class="card-label">Step 1 — Diarization</div>
+      <div class="card-body">Figuring out who spoke when. PyAnnote-3.1 analyses speaker embeddings across time windows. Works reasonably on clean speech. <strong>Fails frequently on overlapping speech</strong> — must assign one speaker to overlap regions and gets it wrong. Especially unreliable on Urdu where code-switching and constant backchannels create ambiguous speaker boundaries.</div>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-label">Step 2 — Separation</div>
+      <div class="card-body">Silence the wrong speaker's segments on each channel. Result is imperfect separated stereo with <strong>residual bleed-through</strong> from the other speaker, artifacts at boundaries, and missed speech during overlaps. The model trained on this learns slightly wrong overlap patterns.</div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-label">Step 3 — Transcription</div>
+      <div class="card-body">Word-level timestamps required for moshi-finetune. Must run forced-alignment ASR on each channel separately. <strong>Urdu ASR is 15–27% WER even on clean speech.</strong> Errors in transcription propagate into training — the model learns wrong text-audio alignments.</div>
+    </div>
+    <div class="card accent-teal full">
+      <div class="card-label">Why purpose-built recordings skip all three problems</div>
+      <div class="card-body">Each speaker on their own dedicated microphone, separate audio inputs, separate channels from the moment of recording. <strong>Zero diarization. Zero separation artifacts. Zero channel attribution errors.</strong> The 170h Kyutai recorded and Fisher's 2,000h telephone calls with separate lines are so prized exactly because perfect channel separation from the source is the rarest property a conversational dataset can have. For Urdu, this dataset does not exist anywhere. Building it is the highest-value investment in the entire project.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <span class="section-title">Synthetic data pipeline for Urdu — our planned approach</span>
+  </div>
+
+  <ol class="steps">
+    <li data-n="1"><strong>Generate Urdu dialogue scripts</strong> — Use GPT-4o or Qwen3 to write Urdu Q&A conversations. Mix formal Urdu, code-switching, natural fillers (haan, acha, matlab). Target 300–500 conversations × 3–5 minutes each. Include diverse domains: general Q&A, customer service, casual chat.</li>
+    <li data-n="2"><strong>Synthesise each speaker separately (NOT blended)</strong> — Speaker A (agent): Google ur-PK-WaveNet or Azure AsadNeural. Speaker B (user): Azure UzmaNeural or CosyVoice with random voice embeddings. Export each turn as separate mono WAV at 24kHz. OR collect real data just as Kyutai did — 170 hours of separately recorded stereo conversations.</li>
+    <li data-n="3"><strong>Stitch into separated stereo using PersonaPlex method</strong> — Left channel = all agent turns, Right channel = all user turns. Apply negative silence overlap for barge-in training. Add noise/reverb to right channel only (Moshi convention for simulating microphone conditions).</li>
+    <li data-n="4"><strong>Generate JSON transcripts with word timestamps</strong> — Synthetic timestamps from TTS output are exact (no estimation needed). Save as JSONL manifest for moshi-finetune training script.</li>
+    <li data-n="5"><strong>Train Urdu tokenizer</strong> — 32K SentencePiece BPE model on Urdu text corpus (CC-100 Urdu ~2GB, Wikipedia Urdu ~200MB). Custom Unicode regex for Nastaliq (U+0600–U+06FF). Required before any text fine-tuning of Moshi.</li>
+    <li data-n="6"><strong>Run moshi-finetune on Urdu data</strong> — Use nu-dialogue/moshi-finetune fork (supports custom tokenizers, proven for J-Moshi Japanese). Initialize text embeddings from new Urdu tokenizer. Fine-tune on synthetic stereo data first, then inject real recorded conversations.</li>
+  </ol>
+</div>
+
+</div><!-- end data panel -->
+
+<!-- ═══════════════ PANEL 4: ROADMAP ═══════════════ -->
+<div class="panel" id="roadmap">
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <span class="section-title">Base model recommendation</span>
+  </div>
+  <div class="two-col">
+    <div class="card accent-teal">
+      <div class="card-label">Recommended start — Qwen3-Omni</div>
+      <div class="card-body">Already understands Urdu speech input (1 of 19 languages). Generates Urdu text natively. Decoupled Thinker (30B MoE, frozen) + Talker (1.35B, fine-tunable). Only the Talker needs adaptation for Urdu speech output. Apache 2.0 open source. <strong>Fastest path to a working Urdu voice system.</strong></div>
+    </div>
+    <div class="card accent-left">
+      <div class="card-label">Parallel track — Moshi adaptation</div>
+      <div class="card-body">Architecturally superior for true full-duplex. Requires full tokenizer replacement, Helium backbone adaptation, then audio fine-tuning. Uses nu-dialogue/moshi-finetune (same fork that built J-Moshi). <strong>Harder path but the only architecture with native continuous duplex processing.</strong></div>
+    </div>
+  </div>
+  <div class="insight amber">
+    <strong>Strategy:</strong> Use Qwen3-Omni immediately as the working system. Build Moshi adaptation in parallel as the quality target. Compare both on Urdu benchmarks at Month 12. The model that outperforms on naturalness and duplex behaviour becomes the production path.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">12</span>
+    <span class="section-title">Phase-wise roadmap</span>
+  </div>
+
+  <div class="phase-track">
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-tag tag-r">Phase 1</span>
+        <span class="phase-title">Proof of Concept — Can we get Urdu output at all?</span>
+        <span class="phase-time">Month 1–3</span>
+      </div>
+      <div class="phase-body">
+        <strong>Goal:</strong> Demonstrate end-to-end Urdu speech input → Urdu speech output using existing models with minimal custom work.<br><br>
+        <strong>Steps:</strong> Deploy Qwen3-Omni. Verify Urdu speech understanding. Build pipeline bridge: Qwen3-Omni (Thinker) → Urdu text → Azure TTS (AsadNeural). This gives a working Urdu voice assistant at ~500–800ms latency. Not full-duplex, but functional. Simultaneously verify Mimi codec encodes/decodes Urdu audio cleanly (J-Moshi confirmed this works for Japanese without retraining). Train SentencePiece Urdu tokenizer on CC-100 + Wikipedia Urdu. Begin recording campaign setup.<br><br>
+        <strong>Deliverable:</strong> Working Urdu voice assistant. Confirmed Mimi + Urdu compatibility. Urdu tokenizer ready.
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-tag tag-a">Phase 2</span>
+        <span class="phase-title">Synthetic Foundation — 500–2,000 hours of Urdu dialogue</span>
+        <span class="phase-time">Month 3–9</span>
+      </div>
+      <div class="phase-body">
+        <strong>Goal:</strong> Generate large-scale synthetic Urdu conversational data and run first Moshi Urdu fine-tuning.<br><br>
+        <strong>Steps:</strong> Generate 50,000–100,000 Urdu dialogue scripts via GPT-4o/Qwen3 (with explicit code-switching instructions). Synthesise ~500h using Azure TTS (AsadNeural + UzmaNeural) using PersonaPlex stitching method. Fine-tune Chatterbox Multilingual from Hindi weights on first 50h of recorded Urdu studio audio — this gives unlimited free Urdu TTS generation. Use it to generate 500–1,500 additional hours of diverse-voice synthetic dialogue. Adapt Moshi for Urdu using nu-dialogue/moshi-finetune: replace tokenizer, pre-train on available Urdu monophonic audio (~100–300h), fine-tune on synthetic stereo.<br><br>
+        <strong>Deliverable:</strong> First functional Urdu full-duplex model. Expected DMOS ~2.5–3.0. Robotic but demonstrates the pipeline works end-to-end.
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-tag tag-g">Phase 3</span>
+        <span class="phase-title">Naturalness Upgrade — Real Urdu conversations injected</span>
+        <span class="phase-time">Month 6–18</span>
+      </div>
+      <div class="phase-body">
+        <strong>Goal:</strong> Transform robotic synthetic model into a natural-sounding conversational agent using real Urdu data.<br><br>
+        <strong>Steps:</strong> Complete 200-hour recording campaign of real two-speaker Pakistani Urdu conversations on separate channels — diverse speakers, regional accents, code-switching sessions, casual conversation, task-oriented dialogue. Process recordings: 24kHz stereo WAV, word timestamps via WhisperX forced alignment. Back-annotate with LLM-generated persona prompts (PersonaPlex method). Multi-stage fine-tuning: start 80% synthetic/20% real → progressively increase real data ratio → final stage 70% real/30% synthetic.<br><br>
+        <strong>Deliverable:</strong> Natural backchannels (ji, haan, achha), natural code-switching, regional prosody. Expected DMOS 3.3–3.7.
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-tag tag-b">Phase 4</span>
+        <span class="phase-title">Production Quality — Custom Urdu TTS + full pipeline</span>
+        <span class="phase-time">Month 12–24</span>
+      </div>
+      <div class="phase-body">
+        <strong>Goal:</strong> Build a dedicated high-quality Urdu multi-stream TTS and use it to close the remaining naturalness gap.<br><br>
+        <strong>Steps:</strong> Train CosyVoice 2 or Kyutai DSM TTS on 200h real recordings + 50h professional studio Urdu (4–6 voice actors). Generate 5,000–20,000 hours of high-quality synthetic Urdu stereo dialogue from this custom TTS — matching Moshi's original training scale. Full retrain or deep fine-tune on complete data mixture. Build Urdu Full-Duplex-Bench evaluation (pause handling, backchannel frequency with ji/haan/achha metrics, code-switching naturalness). Production deployment: streaming pipeline, &lt;200ms latency target.<br><br>
+        <strong>Deliverable:</strong> Production-quality Urdu full-duplex conversational AI. Target DMOS ≥ 3.8. Natural code-switching, culturally authentic honorifics, regional accent robustness.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">13</span>
+    <span class="section-title">The honest trade-off — data strategy vs naturalness</span>
+  </div>
+
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>Strategy</th><th>Expected DMOS</th><th>Timeline</th><th>Key limitation</th></tr></thead>
+      <tbody>
+        <tr><td>Synthetic only (Azure TTS → Moshi fine-tune)</td><td class="bad">2.3–2.8</td><td>4–6 months</td><td>Robotic output. No natural backchannels. No code-switching.</td></tr>
+        <tr><td>Synthetic + 50h real stereo</td><td class="mid">3.0–3.3</td><td>6–9 months</td><td>Some naturalness but limited speaker diversity.</td></tr>
+        <tr><td>Synthetic + 200h real stereo</td><td class="good">3.3–3.7</td><td>12–18 months</td><td>Strong naturalness. Good code-switching. Moderate speaker diversity.</td></tr>
+        <tr><td>Synthetic + 200h real + custom Urdu TTS</td><td class="good">3.7–4.0</td><td>18–24 months</td><td>Near-SOTA. Limited by Urdu TTS quality ceiling (~MOS 4.2).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight teal">
+    <strong>The single most important finding of this research:</strong> This is a <strong>data collection problem, not a compute problem.</strong> Fine-tuning costs $100–$700. Collecting 200 hours of clean two-speaker Urdu recordings costs $17,000–$40,000. Real channel-separated Urdu conversational data does not exist anywhere in the world. Building it is the highest-ROI investment in the project and would simultaneously produce the most valuable Urdu speech resource ever created.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">14</span>
+    <span class="section-title">Key papers and references</span>
+  </div>
+  <div class="pills">
+    <span class="pill r">Moshi — arXiv:2410.00037v2 (Kyutai 2024)</span>
+    <span class="pill r">PersonaPlex — arXiv:2602.06053 (NVIDIA ICASSP 2026)</span>
+    <span class="pill g">DSM/Kyutai TTS — arXiv:2509.08753 (Kyutai 2025)</span>
+    <span class="pill g">J-Moshi — arXiv:2506.02979 (nu-dialogue 2025)</span>
+    <span class="pill b">Urdu TTS — MDPI 2673-4591/87/1/112 (Tacotron2+voice cloning, MOS 4.2)</span>
+    <span class="pill b">Urdu ASR — Interspeech 2025 KICS/UET Lahore (WER 13.1%)</span>
+    <span class="pill">FullDuplexBench — arXiv:2503.04721</span>
+    <span class="pill">nu-dialogue/moshi-finetune (GitHub)</span>
+    <span class="pill">kyutai/tts-1.6b-en_fr (HuggingFace)</span>
+    <span class="pill">Qwen3-Omni — arXiv:2509.17765</span>
+  </div>
+</div>
+
+</div><!-- end roadmap panel -->
+
+<!-- FOOTER -->
+<div class="footer">
+  Prepared as a two-week research summary for internal review. Covers architecture study (Moshi, PersonaPlex, J-Moshi, Kyutai TTS), Urdu speech resource landscape, data pipeline design, and phased build roadmap.<br>
+  All benchmark scores cited from published papers. DMOS projections for Urdu are estimates based on J-Moshi results and PersonaPlex ablation data. Cost estimates intentionally excluded from this document.
+</div>
+
+</div><!-- end page -->
+
+<script>
+function show(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

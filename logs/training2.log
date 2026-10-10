@@ -1,0 +1,1001 @@
+=== Fine-tune config ===
+  GPUs:               2
+  Per-device batch:   2
+  Grad accum:         16
+  Effective batch:    64
+  Epochs:             5
+  Max length:         2048 frames (163s)
+  Save every:         200 steps
+  Train data:         /workspace/processed/train-*.parquet
+  Init model:         /workspace/init_models/moshiko-urdu-float32
+  Output:             /workspace/output/moshi-urdu-finetuned
+=========================
+
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--mixed_precision` was set to a value of `'no'`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[2026-04-29 01:38:36,046] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+W0429 01:38:37.380000 139826382738048 torch/distributed/run.py:779] 
+W0429 01:38:37.380000 139826382738048 torch/distributed/run.py:779] *****************************************
+W0429 01:38:37.380000 139826382738048 torch/distributed/run.py:779] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0429 01:38:37.380000 139826382738048 torch/distributed/run.py:779] *****************************************
+[2026-04-29 01:38:38,687] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-04-29 01:38:38,698] [INFO] [real_accelerator.py:219:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2026-04-29 01:38:40,832] [INFO] [comm.py:652:init_distributed] cdb=None
+[2026-04-29 01:38:40,832] [INFO] [comm.py:683:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2026-04-29 01:38:40,833] [INFO] [comm.py:652:init_distributed] cdb=None
+[W429 01:38:40.705665295 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W429 01:38:40.707478255 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+04/29/2026 01:38:40 - INFO - __main__ - Distributed environment: DistributedType.DEEPSPEED  Backend: nccl
+Num processes: 2
+Process index: 0
+Local process index: 0
+Device: cuda:0
+
+Mixed precision type: fp16
+ds_config: {'fp16': {'enabled': True, 'initial_scale_power': 10}, 'optimizer': {'type': 'AdamW', 'params': {'lr': 'auto', 'weight_decay': 'auto', 'betas': [0.9, 0.95], 'eps': 1e-05}}, 'scheduler': {'type': 'WarmupLR', 'params': {'warmup_min_lr': 'auto', 'warmup_max_lr': 'auto', 'warmup_num_steps': 'auto', 'warmup_type': 'linear', 'last_batch_iteration': -1}}, 'zero_optimization': {'stage': 3, 'overlap_comm': True, 'contiguous_gradients': True, 'reduce_bucket_size': 20000000.0, 'stage3_prefetch_bucket_size': 20000000.0, 'stage3_param_persistence_threshold': 50000.0, 'sub_group_size': 1000000000.0, 'stage3_max_live_parameters': 1000000000.0, 'stage3_max_reuse_distance': 1000000000.0, 'stage3_gather_16bit_weights_on_model_save': True}, 'gradient_accumulation_steps': 'auto', 'gradient_clipping': 'auto', 'train_batch_size': 'auto', 'train_micro_batch_size_per_gpu': 'auto', 'wall_clock_breakdown': False, 'activation_checkpointing': {'partition_activations': True}, 'steps_per_print': inf, 'bf16': {'enabled': False}}
+
+04/29/2026 01:38:40 - INFO - __main__ - Loading Moshi model from /workspace/init_models/moshiko-urdu-float32
+04/29/2026 01:38:41 - INFO - __main__ - Distributed environment: DistributedType.DEEPSPEED  Backend: nccl
+Num processes: 2
+Process index: 1
+Local process index: 1
+Device: cuda:1
+
+Mixed precision type: fp16
+ds_config: {'fp16': {'enabled': True, 'initial_scale_power': 10}, 'optimizer': {'type': 'AdamW', 'params': {'lr': 'auto', 'weight_decay': 'auto', 'betas': [0.9, 0.95], 'eps': 1e-05}}, 'scheduler': {'type': 'WarmupLR', 'params': {'warmup_min_lr': 'auto', 'warmup_max_lr': 'auto', 'warmup_num_steps': 'auto', 'warmup_type': 'linear', 'last_batch_iteration': -1}}, 'zero_optimization': {'stage': 3, 'overlap_comm': True, 'contiguous_gradients': True, 'reduce_bucket_size': 20000000.0, 'stage3_prefetch_bucket_size': 20000000.0, 'stage3_param_persistence_threshold': 50000.0, 'sub_group_size': 1000000000.0, 'stage3_max_live_parameters': 1000000000.0, 'stage3_max_reuse_distance': 1000000000.0, 'stage3_gather_16bit_weights_on_model_save': True}, 'gradient_accumulation_steps': 'auto', 'gradient_clipping': 'auto', 'train_batch_size': 'auto', 'train_micro_batch_size_per_gpu': 'auto', 'wall_clock_breakdown': False, 'activation_checkpointing': {'partition_activations': True}, 'steps_per_print': inf, 'bf16': {'enabled': False}}
+
+[2026-04-29 01:39:36,788] [INFO] [checkpointing.py:1123:configure] Activation Checkpointing Information
+[2026-04-29 01:39:36,788] [INFO] [checkpointing.py:1124:configure] ----Partition Activations True, CPU CHECKPOINTING False
+[2026-04-29 01:39:36,788] [INFO] [checkpointing.py:1125:configure] ----contiguous Memory Checkpointing False with False total layers
+[2026-04-29 01:39:36,788] [INFO] [checkpointing.py:1126:configure] ----Synchronization False
+[2026-04-29 01:39:36,788] [INFO] [checkpointing.py:1127:configure] ----Profiling time in checkpointing False
+04/29/2026 01:39:36 - INFO - __main__ - emb.0.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.1.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.2.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.3.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.4.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.5.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.6.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.7.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.8.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.9.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.10.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.11.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.12.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.13.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.14.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - emb.15.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - text_emb.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - text_linear.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.0.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.1.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.2.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.3.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.4.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.5.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.6.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.7.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.8.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.9.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.10.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.11.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.12.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.13.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.14.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.15.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.16.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.17.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.18.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.19.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.20.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.21.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.22.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.23.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.24.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.25.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.26.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.27.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.28.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.29.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.30.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.self_attn.out_proj.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.gating.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - transformer.layers.31.gating.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - out_norm.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.0.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.1.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.2.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.3.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.4.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.5.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.6.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.7.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.8.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.9.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.10.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.11.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.12.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.13.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.14.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_in.15.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.0.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.1.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.2.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.3.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.4.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.5.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.6.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.7.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.8.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.9.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.10.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.11.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.12.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.13.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_emb.14.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer_text_emb.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.0.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.1.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.2.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.3.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.4.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.self_attn.in_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.self_attn.out_proj_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.norm1.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.norm2.alpha: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.0.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.0.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.1.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.1.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.2.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.2.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.3.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.3.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.4.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.4.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.5.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.5.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.6.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.6.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.7.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.7.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.8.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.8.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.9.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.9.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.10.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.10.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.11.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.11.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.12.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.12.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.13.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.13.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.14.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.14.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.15.linear_in_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - depformer.layers.5.gating.15.linear_out_weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.0.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.1.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.2.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.3.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.4.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.5.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.6.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.7.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.8.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.9.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.10.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.11.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.12.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.13.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.14.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - linears.15.weight: True
+04/29/2026 01:39:36 - INFO - __main__ - Loading train dataset from ['/workspace/processed/train-*.parquet']
+[2026-04-29 01:39:39,424] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed info: version=0.15.4, git-hash=unknown, git-branch=unknown
+[2026-04-29 01:39:39,425] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+[2026-04-29 01:39:39,476] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+[2026-04-29 01:39:53,077] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+Using /root/.cache/torch_extensions/py311_cu124 as PyTorch extensions root...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /root/.cache/torch_extensions/py311_cu124/fused_adam/build.ninja...
+/usr/local/lib/python3.11/dist-packages/torch/utils/cpp_extension.py:1965: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
+  warnings.warn(
+Building extension module fused_adam...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+Using /root/.cache/torch_extensions/py311_cu124 as PyTorch extensions root...
+ninja: no work to do.
+Loading extension module fused_adam...
+Time to load fused_adam op: 0.044806480407714844 seconds
+[2026-04-29 01:39:53,126] [INFO] [logging.py:128:log_dist] [Rank 0] Using DeepSpeed Optimizer param name adamw as basic optimizer
+[2026-04-29 01:39:53,126] [INFO] [logging.py:128:log_dist] [Rank 0] Removing param_group that has no 'params' in the basic Optimizer
+[2026-04-29 01:39:53,139] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed Basic Optimizer = FusedAdam
+[2026-04-29 01:39:53,139] [INFO] [utils.py:59:is_zero_supported_optimizer] Checking ZeRO support for optimizer=FusedAdam type=<class 'deepspeed.ops.adam.fused_adam.FusedAdam'>
+[2026-04-29 01:39:53,139] [INFO] [logging.py:128:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer, MiCS is enabled False, Hierarchical params gather False
+[2026-04-29 01:39:53,139] [INFO] [logging.py:128:log_dist] [Rank 0] Creating torch.float16 ZeRO stage 3 optimizer
+Loading extension module fused_adam...
+Time to load fused_adam op: 0.10414886474609375 seconds
+[2026-04-29 01:39:53,249] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+[2026-04-29 01:39:53,318] [INFO] [utils.py:781:see_memory_usage] Stage 3 initialize beginning
+[2026-04-29 01:39:53,319] [INFO] [utils.py:782:see_memory_usage] MA 15.59 GB         Max_MA 15.59 GB         CA 15.61 GB         Max_CA 16 GB 
+[2026-04-29 01:39:53,319] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 121.56 GB, percent = 6.0%
+[2026-04-29 01:39:53,320] [INFO] [stage3.py:166:__init__] Reduce bucket size 20000000
+[2026-04-29 01:39:53,320] [INFO] [stage3.py:167:__init__] Prefetch bucket size 20000000
+[2026-04-29 01:39:53,393] [INFO] [utils.py:781:see_memory_usage] DeepSpeedZeRoOffload initialize [begin]
+[2026-04-29 01:39:53,394] [INFO] [utils.py:782:see_memory_usage] MA 15.59 GB         Max_MA 15.59 GB         CA 15.61 GB         Max_CA 16 GB 
+[2026-04-29 01:39:53,394] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 121.56 GB, percent = 6.0%
+[2026-04-29 01:39:53,397] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+Parameter Offload: Total persistent parameters: 278528 in 77 params
+[2026-04-29 01:39:53,556] [INFO] [utils.py:781:see_memory_usage] DeepSpeedZeRoOffload initialize [end]
+[2026-04-29 01:39:53,557] [INFO] [utils.py:782:see_memory_usage] MA 7.8 GB         Max_MA 15.6 GB         CA 15.61 GB         Max_CA 16 GB 
+[2026-04-29 01:39:53,557] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 121.58 GB, percent = 6.0%
+[2026-04-29 01:39:53,642] [INFO] [utils.py:781:see_memory_usage] Before creating fp16 partitions
+[2026-04-29 01:39:53,643] [INFO] [utils.py:782:see_memory_usage] MA 7.8 GB         Max_MA 7.8 GB         CA 15.61 GB         Max_CA 16 GB 
+[2026-04-29 01:39:53,643] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 121.59 GB, percent = 6.0%
+[2026-04-29 01:40:00,283] [INFO] [utils.py:781:see_memory_usage] After creating fp16 partitions: 5
+[2026-04-29 01:40:00,283] [INFO] [utils.py:782:see_memory_usage] MA 7.8 GB         Max_MA 7.8 GB         CA 7.81 GB         Max_CA 16 GB 
+[2026-04-29 01:40:00,283] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.8 GB, percent = 6.1%
+[2026-04-29 01:40:00,362] [INFO] [utils.py:781:see_memory_usage] Before creating fp32 partitions
+[2026-04-29 01:40:00,362] [INFO] [utils.py:782:see_memory_usage] MA 7.8 GB         Max_MA 7.8 GB         CA 7.81 GB         Max_CA 8 GB 
+[2026-04-29 01:40:00,362] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.81 GB, percent = 6.1%
+[2026-04-29 01:40:00,519] [INFO] [utils.py:781:see_memory_usage] After creating fp32 partitions
+[2026-04-29 01:40:00,519] [INFO] [utils.py:782:see_memory_usage] MA 23.39 GB         Max_MA 24.69 GB         CA 25.33 GB         Max_CA 25 GB 
+[2026-04-29 01:40:00,519] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.82 GB, percent = 6.1%
+[2026-04-29 01:40:00,598] [INFO] [utils.py:781:see_memory_usage] Before initializing optimizer states
+[2026-04-29 01:40:00,598] [INFO] [utils.py:782:see_memory_usage] MA 23.39 GB         Max_MA 23.39 GB         CA 25.33 GB         Max_CA 25 GB 
+[2026-04-29 01:40:00,598] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.82 GB, percent = 6.1%
+[2026-04-29 01:40:00,690] [INFO] [utils.py:781:see_memory_usage] After initializing optimizer states
+[2026-04-29 01:40:00,690] [INFO] [utils.py:782:see_memory_usage] MA 23.39 GB         Max_MA 27.24 GB         CA 29.18 GB         Max_CA 29 GB 
+[2026-04-29 01:40:00,690] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.82 GB, percent = 6.1%
+[2026-04-29 01:40:00,691] [INFO] [stage3.py:521:_setup_for_real_optimizer] optimizer state initialized
+[2026-04-29 01:40:00,798] [WARNING] [lr_schedules.py:683:get_lr] Attempting to get learning rate from scheduler before it has started
+[2026-04-29 01:40:00,872] [INFO] [utils.py:781:see_memory_usage] After initializing ZeRO optimizer
+[2026-04-29 01:40:00,873] [INFO] [utils.py:782:see_memory_usage] MA 31.22 GB         Max_MA 31.71 GB         CA 33.13 GB         Max_CA 33 GB 
+[2026-04-29 01:40:00,873] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 123.83 GB, percent = 6.1%
+[2026-04-29 01:40:00,873] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed Final Optimizer = DeepSpeedZeroOptimizer_Stage3
+[2026-04-29 01:40:00,873] [WARNING] [lr_schedules.py:683:get_lr] Attempting to get learning rate from scheduler before it has started
+[2026-04-29 01:40:00,873] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed using configured LR scheduler = WarmupLR
+[2026-04-29 01:40:00,873] [INFO] [logging.py:128:log_dist] [Rank 0] DeepSpeed LR Scheduler = <deepspeed.runtime.lr_schedules.WarmupLR object at 0x751014153d10>
+[2026-04-29 01:40:00,873] [INFO] [logging.py:128:log_dist] [Rank 0] step=0, skipped=0, lr=[0, 0], mom=[[0.9, 0.95], [0.9, 0.95]]
+[2026-04-29 01:40:00,874] [INFO] [config.py:999:print] DeepSpeedEngine configuration:
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   activation_checkpointing_config  {
+    "partition_activations": true, 
+    "contiguous_memory_optimization": false, 
+    "cpu_checkpointing": false, 
+    "number_checkpoints": null, 
+    "synchronize_checkpoint_boundary": false, 
+    "profile": false
+}
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True, 'use_gds': False}
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   amp_enabled .................. False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   amp_params ................... False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   autotuning_config ............ {
+    "enabled": false, 
+    "start_step": null, 
+    "end_step": null, 
+    "metric_path": null, 
+    "arg_mappings": null, 
+    "metric": "throughput", 
+    "model_info": null, 
+    "results_dir": "autotuning_results", 
+    "exps_dir": "autotuning_exps", 
+    "overwrite": true, 
+    "fast": true, 
+    "start_profile_step": 3, 
+    "end_profile_step": 5, 
+    "tuner_type": "gridsearch", 
+    "tuner_early_stopping": 5, 
+    "tuner_num_trials": 50, 
+    "model_info_path": null, 
+    "mp_size": 1, 
+    "max_train_batch_size": null, 
+    "min_train_batch_size": 1, 
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+    "min_train_micro_batch_size_per_gpu": 1, 
+    "num_tuning_micro_batch_sizes": 3
+}
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   bfloat16_enabled ............. False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   bfloat16_immediate_grad_update  False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   checkpoint_parallel_write_pipeline  False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   checkpoint_tag_validation_enabled  True
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   checkpoint_tag_validation_fail  False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x75101696a0d0>
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   communication_data_type ...... None
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   curriculum_enabled_legacy .... False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   curriculum_params_legacy ..... False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   data_efficiency_enabled ...... False
+[2026-04-29 01:40:00,874] [INFO] [config.py:1003:print]   dataloader_drop_last ......... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   disable_allgather ............ False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   dump_state ................... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   dynamic_loss_scale_args ...... {'init_scale': 1024, 'scale_window': 1000, 'delayed_shift': 2, 'consecutive_hysteresis': False, 'min_scale': 1}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_enabled ........... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_gas_boundary_resolution  1
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_layer_num ......... 0
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_max_iter .......... 100
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_stability ......... 1e-06
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_tol ............... 0.01
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   eigenvalue_verbose ........... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   elasticity_enabled ........... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   flops_profiler_config ........ {
+    "enabled": false, 
+    "recompute_fwd_factor": 0.0, 
+    "profile_step": 1, 
+    "module_depth": -1, 
+    "top_modules": 1, 
+    "detailed": true, 
+    "output_file": null
+}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   fp16_auto_cast ............... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   fp16_enabled ................. True
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   fp16_master_weights_and_gradients  False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   global_rank .................. 0
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   grad_accum_dtype ............. None
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   gradient_accumulation_steps .. 16
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   gradient_clipping ............ 1.0
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   gradient_predivide_factor .... 1.0
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   graph_harvesting ............. False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   initial_dynamic_scale ........ 1024
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   load_universal_checkpoint .... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   loss_scale ................... 0
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   memory_breakdown ............. False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   mics_hierarchial_params_gather  False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   mics_shard_size .............. -1
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') comet=CometConfig(enabled=False, samples_log_interval=100, project=None, workspace=None, api_key=None, experiment_name=None, experiment_key=None, online=None, mode=None) wandb=WandbConfig(enabled=False, group=None, team=None, project='deepspeed') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName')
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   nebula_config ................ {
+    "enabled": false, 
+    "persistent_storage_path": null, 
+    "persistent_time_interval": 100, 
+    "num_of_version_in_retention": 2, 
+    "enable_nebula_load": true, 
+    "load_path": null
+}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   optimizer_legacy_fusion ...... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   optimizer_name ............... adamw
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   optimizer_params ............. {'lr': 3e-05, 'weight_decay': 0.1, 'betas': [0.9, 0.95], 'eps': 1e-05}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0, 'pipe_partitioned': True, 'grad_partitioned': True}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   pld_enabled .................. False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   pld_params ................... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   prescale_gradients ........... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   scheduler_name ............... WarmupLR
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   scheduler_params ............. {'warmup_min_lr': 0, 'warmup_max_lr': [3e-05, 3e-05], 'warmup_num_steps': 100, 'warmup_type': 'linear', 'last_batch_iteration': -1}
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   seq_parallel_communication_data_type  torch.float32
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   sparse_attention ............. None
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   sparse_gradients_enabled ..... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   steps_per_print .............. inf
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   timers_config ................ enabled=True synchronized=True
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   train_batch_size ............. 64
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   train_micro_batch_size_per_gpu  2
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   use_data_before_expert_parallel_  False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   use_node_local_storage ....... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   wall_clock_breakdown ......... False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   weight_quantization_config ... None
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   world_size ................... 2
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   zero_allow_untested_optimizer  False
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   zero_config .................. stage=3 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=20000000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=500000000 overlap_comm=True load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1000000000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=20000000 param_persistence_threshold=50000 model_persistence_threshold=9223372036854775807 max_live_parameters=1000000000 max_reuse_distance=1000000000 gather_16bit_weights_on_model_save=True use_all_reduce_for_fetch_params=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   zero_enabled ................. True
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   zero_force_ds_cpu_optimizer .. True
+[2026-04-29 01:40:00,875] [INFO] [config.py:1003:print]   zero_optimization_stage ...... 3
+[2026-04-29 01:40:00,875] [INFO] [config.py:989:print_user_config]   json = {
+    "fp16": {
+        "enabled": true, 
+        "initial_scale_power": 10
+    }, 
+    "optimizer": {
+        "type": "AdamW", 
+        "params": {
+            "lr": 3e-05, 
+            "weight_decay": 0.1, 
+            "betas": [0.9, 0.95], 
+            "eps": 1e-05
+        }
+    }, 
+    "scheduler": {
+        "type": "WarmupLR", 
+        "params": {
+            "warmup_min_lr": 0, 
+            "warmup_max_lr": [3e-05, 3e-05], 
+            "warmup_num_steps": 100, 
+            "warmup_type": "linear", 
+            "last_batch_iteration": -1
+        }
+    }, 
+    "zero_optimization": {
+        "stage": 3, 
+        "overlap_comm": true, 
+        "contiguous_gradients": true, 
+        "reduce_bucket_size": 2.000000e+07, 
+        "stage3_prefetch_bucket_size": 2.000000e+07, 
+        "stage3_param_persistence_threshold": 5.000000e+04, 
+        "sub_group_size": 1.000000e+09, 
+        "stage3_max_live_parameters": 1.000000e+09, 
+        "stage3_max_reuse_distance": 1.000000e+09, 
+        "stage3_gather_16bit_weights_on_model_save": true
+    }, 
+    "gradient_accumulation_steps": 16, 
+    "gradient_clipping": 1.0, 
+    "train_batch_size": 64, 
+    "train_micro_batch_size_per_gpu": 2, 
+    "wall_clock_breakdown": false, 
+    "activation_checkpointing": {
+        "partition_activations": true
+    }, 
+    "steps_per_print": inf, 
+    "bf16": {
+        "enabled": false
+    }
+}
+04/29/2026 01:40:00 - INFO - __main__ - ***** Running training *****
+04/29/2026 01:40:00 - INFO - __main__ -   Num examples = 1361
+04/29/2026 01:40:00 - INFO - __main__ -   Num Epochs = 5
+04/29/2026 01:40:00 - INFO - __main__ -   Instantaneous batch size per device = 2
+04/29/2026 01:40:00 - INFO - __main__ -   Gradient Accumulation steps = 16
+04/29/2026 01:40:00 - INFO - __main__ -   Total train batch size (w. parallel, distributed & accumulation) = 64
+04/29/2026 01:40:00 - INFO - __main__ -   Total optimization steps = 110
+  0%|          | 0/110 [00:00<?, ?it/s][2026-04-29 01:40:22,811] [WARNING] [stage3.py:2114:step] 1 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  1%|          | 1/110 [00:21<39:50, 21.93s/it]04/29/2026 01:40:22 - INFO - __main__ - Epoch: 0, Steps: 1, LRs: {'tempformer': '0.000e+00', 'depformer': '0.000e+00'}, Loss: 12.98616 (text: 6.35457, audio: 6.63159)
+[2026-04-29 01:40:42,712] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  2%|▏         | 2/110 [00:41<37:19, 20.74s/it]04/29/2026 01:40:42 - INFO - __main__ - Epoch: 0, Steps: 2, LRs: {'tempformer': '3.000e-07', 'depformer': '3.000e-07'}, Loss: 13.26863 (text: 6.54128, audio: 6.72735)
+[2026-04-29 01:41:02,420] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  3%|▎         | 3/110 [01:01<36:08, 20.27s/it]04/29/2026 01:41:02 - INFO - __main__ - Epoch: 0, Steps: 3, LRs: {'tempformer': '6.000e-07', 'depformer': '6.000e-07'}, Loss: 13.08942 (text: 6.43624, audio: 6.65318)
+[2026-04-29 01:41:22,012] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  4%|▎         | 4/110 [01:21<35:20, 20.00s/it]04/29/2026 01:41:22 - INFO - __main__ - Epoch: 0, Steps: 4, LRs: {'tempformer': '9.000e-07', 'depformer': '9.000e-07'}, Loss: 12.94851 (text: 6.48971, audio: 6.45880)
+[2026-04-29 01:41:41,776] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  5%|▍         | 5/110 [01:40<34:51, 19.92s/it]04/29/2026 01:41:41 - INFO - __main__ - Epoch: 0, Steps: 5, LRs: {'tempformer': '1.200e-06', 'depformer': '1.200e-06'}, Loss: 12.98777 (text: 6.40927, audio: 6.57850)
+[2026-04-29 01:42:01,476] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  5%|▌         | 6/110 [02:00<34:23, 19.84s/it]04/29/2026 01:42:01 - INFO - __main__ - Epoch: 0, Steps: 6, LRs: {'tempformer': '1.500e-06', 'depformer': '1.500e-06'}, Loss: 12.44851 (text: 6.18702, audio: 6.26149)
+[2026-04-29 01:42:21,880] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  6%|▋         | 7/110 [02:21<34:22, 20.03s/it]04/29/2026 01:42:21 - INFO - __main__ - Epoch: 0, Steps: 7, LRs: {'tempformer': '1.800e-06', 'depformer': '1.800e-06'}, Loss: 11.77473 (text: 6.02623, audio: 5.74850)
+[2026-04-29 01:42:41,855] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  7%|▋         | 8/110 [02:40<34:00, 20.01s/it]04/29/2026 01:42:41 - INFO - __main__ - Epoch: 0, Steps: 8, LRs: {'tempformer': '2.100e-06', 'depformer': '2.100e-06'}, Loss: 11.09757 (text: 5.99122, audio: 5.10635)
+[2026-04-29 01:43:01,556] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  8%|▊         | 9/110 [03:00<33:31, 19.91s/it]04/29/2026 01:43:01 - INFO - __main__ - Epoch: 0, Steps: 9, LRs: {'tempformer': '2.400e-06', 'depformer': '2.400e-06'}, Loss: 10.29293 (text: 5.71825, audio: 4.57468)
+[2026-04-29 01:43:21,964] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+  9%|▉         | 10/110 [03:21<33:26, 20.07s/it]04/29/2026 01:43:21 - INFO - __main__ - Epoch: 0, Steps: 10, LRs: {'tempformer': '2.700e-06', 'depformer': '2.700e-06'}, Loss: 9.80912 (text: 5.63140, audio: 4.17772)
+[2026-04-29 01:43:41,577] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 10%|█         | 11/110 [03:40<32:52, 19.93s/it]04/29/2026 01:43:41 - INFO - __main__ - Epoch: 0, Steps: 11, LRs: {'tempformer': '3.000e-06', 'depformer': '3.000e-06'}, Loss: 9.61502 (text: 5.58117, audio: 4.03385)
+[2026-04-29 01:44:01,180] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 11%|█         | 12/110 [04:00<32:23, 19.83s/it]04/29/2026 01:44:01 - INFO - __main__ - Epoch: 0, Steps: 12, LRs: {'tempformer': '3.300e-06', 'depformer': '3.300e-06'}, Loss: 9.47601 (text: 5.71142, audio: 3.76458)
+[2026-04-29 01:44:20,673] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 12%|█▏        | 13/110 [04:19<31:53, 19.73s/it]04/29/2026 01:44:20 - INFO - __main__ - Epoch: 0, Steps: 13, LRs: {'tempformer': '3.600e-06', 'depformer': '3.600e-06'}, Loss: 9.10407 (text: 5.57102, audio: 3.53304)
+[2026-04-29 01:44:40,187] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 13%|█▎        | 14/110 [04:39<31:27, 19.66s/it]04/29/2026 01:44:40 - INFO - __main__ - Epoch: 0, Steps: 14, LRs: {'tempformer': '3.900e-06', 'depformer': '3.900e-06'}, Loss: 8.75045 (text: 5.40927, audio: 3.34118)
+[2026-04-29 01:45:00,090] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 14%|█▎        | 15/110 [04:59<31:14, 19.74s/it]04/29/2026 01:45:00 - INFO - __main__ - Epoch: 0, Steps: 15, LRs: {'tempformer': '4.200e-06', 'depformer': '4.200e-06'}, Loss: 8.77392 (text: 5.43019, audio: 3.34373)
+[2026-04-29 01:45:20,044] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 15%|█▍        | 16/110 [05:19<31:01, 19.80s/it]04/29/2026 01:45:20 - INFO - __main__ - Epoch: 0, Steps: 16, LRs: {'tempformer': '4.500e-06', 'depformer': '4.500e-06'}, Loss: 8.45454 (text: 5.16807, audio: 3.28647)
+[2026-04-29 01:45:40,009] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 15%|█▌        | 17/110 [05:39<30:46, 19.85s/it]04/29/2026 01:45:40 - INFO - __main__ - Epoch: 0, Steps: 17, LRs: {'tempformer': '4.800e-06', 'depformer': '4.800e-06'}, Loss: 7.96613 (text: 5.07198, audio: 2.89415)
+[2026-04-29 01:45:59,857] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 16%|█▋        | 18/110 [05:58<30:26, 19.85s/it]04/29/2026 01:45:59 - INFO - __main__ - Epoch: 0, Steps: 18, LRs: {'tempformer': '5.100e-06', 'depformer': '5.100e-06'}, Loss: 7.71910 (text: 4.78902, audio: 2.93008)
+[2026-04-29 01:46:19,815] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 17%|█▋        | 19/110 [06:18<30:09, 19.88s/it]04/29/2026 01:46:19 - INFO - __main__ - Epoch: 0, Steps: 19, LRs: {'tempformer': '5.400e-06', 'depformer': '5.400e-06'}, Loss: 7.99184 (text: 5.05501, audio: 2.93683)
+[2026-04-29 01:46:39,677] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 18%|█▊        | 20/110 [06:38<29:48, 19.88s/it]04/29/2026 01:46:39 - INFO - __main__ - Epoch: 0, Steps: 20, LRs: {'tempformer': '5.700e-06', 'depformer': '5.700e-06'}, Loss: 7.86193 (text: 4.94810, audio: 2.91383)
+[2026-04-29 01:46:59,694] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 19%|█▉        | 21/110 [06:58<29:32, 19.92s/it]04/29/2026 01:46:59 - INFO - __main__ - Epoch: 0, Steps: 21, LRs: {'tempformer': '6.000e-06', 'depformer': '6.000e-06'}, Loss: 7.50722 (text: 4.85686, audio: 2.65036)
+ 20%|██        | 22/110 [07:04<23:08, 15.78s/it]04/29/2026 01:47:05 - INFO - __main__ - Epoch: 0, Steps: 22, LRs: {'tempformer': '6.000e-06', 'depformer': '6.000e-06'}, Loss: 7.78950 (text: 5.00237, audio: 2.78712)
+[2026-04-29 01:47:19,853] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 21%|██        | 23/110 [07:25<24:45, 17.07s/it]04/29/2026 01:47:25 - INFO - __main__ - Epoch: 1, Steps: 23, LRs: {'tempformer': '6.300e-06', 'depformer': '6.300e-06'}, Loss: 7.42018 (text: 4.82662, audio: 2.59356)
+[2026-04-29 01:47:39,672] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 22%|██▏       | 24/110 [07:44<25:38, 17.89s/it]04/29/2026 01:47:45 - INFO - __main__ - Epoch: 1, Steps: 24, LRs: {'tempformer': '6.600e-06', 'depformer': '6.600e-06'}, Loss: 7.24569 (text: 4.68919, audio: 2.55650)
+[2026-04-29 01:47:59,489] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 23%|██▎       | 25/110 [08:04<26:09, 18.47s/it]04/29/2026 01:48:05 - INFO - __main__ - Epoch: 1, Steps: 25, LRs: {'tempformer': '6.900e-06', 'depformer': '6.900e-06'}, Loss: 7.58406 (text: 4.98892, audio: 2.59514)
+[2026-04-29 01:48:20,126] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 24%|██▎       | 26/110 [08:25<26:47, 19.13s/it]04/29/2026 01:48:26 - INFO - __main__ - Epoch: 1, Steps: 26, LRs: {'tempformer': '7.200e-06', 'depformer': '7.200e-06'}, Loss: 7.36503 (text: 4.74981, audio: 2.61522)
+[2026-04-29 01:48:39,963] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 25%|██▍       | 27/110 [08:45<26:46, 19.35s/it]04/29/2026 01:48:46 - INFO - __main__ - Epoch: 1, Steps: 27, LRs: {'tempformer': '7.500e-06', 'depformer': '7.500e-06'}, Loss: 6.93374 (text: 4.53093, audio: 2.40280)
+[2026-04-29 01:48:59,759] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 25%|██▌       | 28/110 [09:04<26:36, 19.47s/it]04/29/2026 01:49:05 - INFO - __main__ - Epoch: 1, Steps: 28, LRs: {'tempformer': '7.800e-06', 'depformer': '7.800e-06'}, Loss: 6.98316 (text: 4.58178, audio: 2.40138)
+[2026-04-29 01:49:19,456] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 26%|██▋       | 29/110 [09:24<26:21, 19.53s/it]04/29/2026 01:49:25 - INFO - __main__ - Epoch: 1, Steps: 29, LRs: {'tempformer': '8.100e-06', 'depformer': '8.100e-06'}, Loss: 6.99443 (text: 4.65275, audio: 2.34168)
+[2026-04-29 01:49:39,130] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 27%|██▋       | 30/110 [09:44<26:05, 19.57s/it]04/29/2026 01:49:45 - INFO - __main__ - Epoch: 1, Steps: 30, LRs: {'tempformer': '8.400e-06', 'depformer': '8.400e-06'}, Loss: 6.95329 (text: 4.64762, audio: 2.30567)
+[2026-04-29 01:49:58,919] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 28%|██▊       | 31/110 [10:04<25:59, 19.74s/it]04/29/2026 01:50:05 - INFO - __main__ - Epoch: 1, Steps: 31, LRs: {'tempformer': '8.700e-06', 'depformer': '8.700e-06'}, Loss: 6.88533 (text: 4.69149, audio: 2.19384)
+[2026-04-29 01:50:19,280] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 29%|██▉       | 32/110 [10:24<25:48, 19.85s/it]04/29/2026 01:50:25 - INFO - __main__ - Epoch: 1, Steps: 32, LRs: {'tempformer': '9.000e-06', 'depformer': '9.000e-06'}, Loss: 6.67151 (text: 4.52279, audio: 2.14872)
+[2026-04-29 01:50:39,584] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 30%|███       | 33/110 [10:44<25:40, 20.00s/it]04/29/2026 01:50:45 - INFO - __main__ - Epoch: 1, Steps: 33, LRs: {'tempformer': '9.300e-06', 'depformer': '9.300e-06'}, Loss: 6.82462 (text: 4.69068, audio: 2.13395)
+[2026-04-29 01:50:59,687] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 31%|███       | 34/110 [11:04<25:20, 20.01s/it]04/29/2026 01:51:05 - INFO - __main__ - Epoch: 1, Steps: 34, LRs: {'tempformer': '9.600e-06', 'depformer': '9.600e-06'}, Loss: 6.93066 (text: 4.70974, audio: 2.22093)
+[2026-04-29 01:51:19,533] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 32%|███▏      | 35/110 [11:24<24:58, 19.97s/it]04/29/2026 01:51:25 - INFO - __main__ - Epoch: 1, Steps: 35, LRs: {'tempformer': '9.900e-06', 'depformer': '9.900e-06'}, Loss: 6.49036 (text: 4.43759, audio: 2.05276)
+[2026-04-29 01:51:39,433] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 33%|███▎      | 36/110 [11:44<24:34, 19.93s/it]04/29/2026 01:51:45 - INFO - __main__ - Epoch: 1, Steps: 36, LRs: {'tempformer': '1.020e-05', 'depformer': '1.020e-05'}, Loss: 6.91162 (text: 4.82208, audio: 2.08954)
+[2026-04-29 01:51:59,295] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 34%|███▎      | 37/110 [12:04<24:12, 19.90s/it]04/29/2026 01:52:05 - INFO - __main__ - Epoch: 1, Steps: 37, LRs: {'tempformer': '1.050e-05', 'depformer': '1.050e-05'}, Loss: 6.42128 (text: 4.47133, audio: 1.94995)
+[2026-04-29 01:52:19,102] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 35%|███▍      | 38/110 [12:24<23:52, 19.90s/it]04/29/2026 01:52:25 - INFO - __main__ - Epoch: 1, Steps: 38, LRs: {'tempformer': '1.080e-05', 'depformer': '1.080e-05'}, Loss: 6.48125 (text: 4.55603, audio: 1.92523)
+[2026-04-29 01:52:39,091] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 35%|███▌      | 39/110 [12:44<23:34, 19.92s/it]04/29/2026 01:52:45 - INFO - __main__ - Epoch: 1, Steps: 39, LRs: {'tempformer': '1.110e-05', 'depformer': '1.110e-05'}, Loss: 6.55069 (text: 4.60259, audio: 1.94810)
+[2026-04-29 01:52:59,530] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 36%|███▋      | 40/110 [13:04<23:25, 20.07s/it]04/29/2026 01:53:05 - INFO - __main__ - Epoch: 1, Steps: 40, LRs: {'tempformer': '1.140e-05', 'depformer': '1.140e-05'}, Loss: 6.44327 (text: 4.48438, audio: 1.95889)
+[2026-04-29 01:53:19,616] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 37%|███▋      | 41/110 [13:24<23:04, 20.06s/it]04/29/2026 01:53:25 - INFO - __main__ - Epoch: 1, Steps: 41, LRs: {'tempformer': '1.170e-05', 'depformer': '1.170e-05'}, Loss: 6.27351 (text: 4.36875, audio: 1.90475)
+[2026-04-29 01:53:39,561] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 38%|███▊      | 42/110 [13:45<22:48, 20.13s/it]04/29/2026 01:53:45 - INFO - __main__ - Epoch: 1, Steps: 42, LRs: {'tempformer': '1.200e-05', 'depformer': '1.200e-05'}, Loss: 6.39353 (text: 4.45830, audio: 1.93523)
+[2026-04-29 01:53:59,907] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 39%|███▉      | 43/110 [14:05<22:27, 20.11s/it]04/29/2026 01:54:06 - INFO - __main__ - Epoch: 1, Steps: 43, LRs: {'tempformer': '1.230e-05', 'depformer': '1.230e-05'}, Loss: 6.45621 (text: 4.50532, audio: 1.95088)
+ 40%|████      | 44/110 [14:11<17:30, 15.92s/it]04/29/2026 01:54:12 - INFO - __main__ - Epoch: 1, Steps: 44, LRs: {'tempformer': '1.230e-05', 'depformer': '1.230e-05'}, Loss: 6.57430 (text: 4.63292, audio: 1.94138)
+[2026-04-29 01:54:20,094] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 41%|████      | 45/110 [14:31<18:35, 17.16s/it]04/29/2026 01:54:32 - INFO - __main__ - Epoch: 2, Steps: 45, LRs: {'tempformer': '1.260e-05', 'depformer': '1.260e-05'}, Loss: 6.42302 (text: 4.51582, audio: 1.90720)
+[2026-04-29 01:54:40,114] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 42%|████▏     | 46/110 [14:51<19:12, 18.01s/it]04/29/2026 01:54:52 - INFO - __main__ - Epoch: 2, Steps: 46, LRs: {'tempformer': '1.290e-05', 'depformer': '1.290e-05'}, Loss: 6.51693 (text: 4.65740, audio: 1.85954)
+[2026-04-29 01:54:59,998] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 43%|████▎     | 47/110 [15:11<19:29, 18.56s/it]04/29/2026 01:55:12 - INFO - __main__ - Epoch: 2, Steps: 47, LRs: {'tempformer': '1.320e-05', 'depformer': '1.320e-05'}, Loss: 6.21997 (text: 4.41205, audio: 1.80792)
+[2026-04-29 01:55:19,747] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 44%|████▎     | 48/110 [15:30<19:34, 18.94s/it]04/29/2026 01:55:31 - INFO - __main__ - Epoch: 2, Steps: 48, LRs: {'tempformer': '1.350e-05', 'depformer': '1.350e-05'}, Loss: 6.32784 (text: 4.35641, audio: 1.97143)
+[2026-04-29 01:55:39,599] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 45%|████▍     | 49/110 [15:50<19:29, 19.18s/it]04/29/2026 01:55:51 - INFO - __main__ - Epoch: 2, Steps: 49, LRs: {'tempformer': '1.380e-05', 'depformer': '1.380e-05'}, Loss: 6.04100 (text: 4.23977, audio: 1.80123)
+[2026-04-29 01:55:59,340] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 45%|████▌     | 50/110 [16:10<19:22, 19.37s/it]04/29/2026 01:56:11 - INFO - __main__ - Epoch: 2, Steps: 50, LRs: {'tempformer': '1.410e-05', 'depformer': '1.410e-05'}, Loss: 6.27727 (text: 4.44027, audio: 1.83701)
+[2026-04-29 01:56:19,143] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 46%|████▋     | 51/110 [16:30<19:09, 19.48s/it]04/29/2026 01:56:31 - INFO - __main__ - Epoch: 2, Steps: 51, LRs: {'tempformer': '1.440e-05', 'depformer': '1.440e-05'}, Loss: 6.37080 (text: 4.51967, audio: 1.85113)
+[2026-04-29 01:56:38,907] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 47%|████▋     | 52/110 [16:49<18:53, 19.55s/it]04/29/2026 01:56:50 - INFO - __main__ - Epoch: 2, Steps: 52, LRs: {'tempformer': '1.470e-05', 'depformer': '1.470e-05'}, Loss: 6.25414 (text: 4.34227, audio: 1.91188)
+[2026-04-29 01:56:58,604] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 48%|████▊     | 53/110 [17:09<18:41, 19.68s/it]04/29/2026 01:57:10 - INFO - __main__ - Epoch: 2, Steps: 53, LRs: {'tempformer': '1.500e-05', 'depformer': '1.500e-05'}, Loss: 5.94822 (text: 4.12073, audio: 1.82749)
+[2026-04-29 01:57:18,629] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 49%|████▉     | 54/110 [17:29<18:25, 19.75s/it]04/29/2026 01:57:30 - INFO - __main__ - Epoch: 2, Steps: 54, LRs: {'tempformer': '1.530e-05', 'depformer': '1.530e-05'}, Loss: 6.19468 (text: 4.53457, audio: 1.66011)
+[2026-04-29 01:57:38,538] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 50%|█████     | 55/110 [17:49<18:06, 19.76s/it]04/29/2026 01:57:50 - INFO - __main__ - Epoch: 2, Steps: 55, LRs: {'tempformer': '1.560e-05', 'depformer': '1.560e-05'}, Loss: 6.28959 (text: 4.43386, audio: 1.85573)
+[2026-04-29 01:57:58,468] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 51%|█████     | 56/110 [18:09<17:51, 19.85s/it]04/29/2026 01:58:10 - INFO - __main__ - Epoch: 2, Steps: 56, LRs: {'tempformer': '1.590e-05', 'depformer': '1.590e-05'}, Loss: 6.04638 (text: 4.28778, audio: 1.75860)
+[2026-04-29 01:58:18,427] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 52%|█████▏    | 57/110 [18:30<17:39, 19.99s/it]04/29/2026 01:58:30 - INFO - __main__ - Epoch: 2, Steps: 57, LRs: {'tempformer': '1.620e-05', 'depformer': '1.620e-05'}, Loss: 5.87584 (text: 4.06830, audio: 1.80755)
+[2026-04-29 01:58:38,758] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 53%|█████▎    | 58/110 [18:50<17:22, 20.05s/it]04/29/2026 01:58:51 - INFO - __main__ - Epoch: 2, Steps: 58, LRs: {'tempformer': '1.650e-05', 'depformer': '1.650e-05'}, Loss: 6.12185 (text: 4.18957, audio: 1.93228)
+[2026-04-29 01:58:58,984] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 54%|█████▎    | 59/110 [19:10<17:02, 20.04s/it]04/29/2026 01:59:11 - INFO - __main__ - Epoch: 2, Steps: 59, LRs: {'tempformer': '1.680e-05', 'depformer': '1.680e-05'}, Loss: 6.09563 (text: 4.27649, audio: 1.81915)
+[2026-04-29 01:59:18,935] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 55%|█████▍    | 60/110 [19:30<16:41, 20.03s/it]04/29/2026 01:59:31 - INFO - __main__ - Epoch: 2, Steps: 60, LRs: {'tempformer': '1.710e-05', 'depformer': '1.710e-05'}, Loss: 6.01367 (text: 4.21704, audio: 1.79663)
+[2026-04-29 01:59:38,980] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 55%|█████▌    | 61/110 [19:50<16:19, 20.00s/it]04/29/2026 01:59:51 - INFO - __main__ - Epoch: 2, Steps: 61, LRs: {'tempformer': '1.740e-05', 'depformer': '1.740e-05'}, Loss: 6.68866 (text: 4.52444, audio: 2.16422)
+[2026-04-29 01:59:59,145] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 56%|█████▋    | 62/110 [20:10<16:03, 20.08s/it]04/29/2026 02:00:11 - INFO - __main__ - Epoch: 2, Steps: 62, LRs: {'tempformer': '1.770e-05', 'depformer': '1.770e-05'}, Loss: 5.89633 (text: 3.98636, audio: 1.90997)
+[2026-04-29 02:00:19,214] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 57%|█████▋    | 63/110 [20:30<15:41, 20.03s/it]04/29/2026 02:00:31 - INFO - __main__ - Epoch: 2, Steps: 63, LRs: {'tempformer': '1.800e-05', 'depformer': '1.800e-05'}, Loss: 6.05790 (text: 4.12137, audio: 1.93653)
+[2026-04-29 02:00:39,012] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 58%|█████▊    | 64/110 [20:50<15:18, 19.97s/it]04/29/2026 02:00:51 - INFO - __main__ - Epoch: 2, Steps: 64, LRs: {'tempformer': '1.830e-05', 'depformer': '1.830e-05'}, Loss: 6.28039 (text: 4.31417, audio: 1.96622)
+[2026-04-29 02:00:58,814] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 59%|█████▉    | 65/110 [21:09<14:55, 19.91s/it]04/29/2026 02:01:10 - INFO - __main__ - Epoch: 2, Steps: 65, LRs: {'tempformer': '1.860e-05', 'depformer': '1.860e-05'}, Loss: 5.83666 (text: 4.00391, audio: 1.83275)
+ 60%|██████    | 66/110 [21:15<11:31, 15.73s/it]04/29/2026 02:01:16 - INFO - __main__ - Epoch: 2, Steps: 66, LRs: {'tempformer': '1.860e-05', 'depformer': '1.860e-05'}, Loss: 6.12260 (text: 4.32449, audio: 1.79810)
+[2026-04-29 02:01:18,585] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 61%|██████    | 67/110 [21:35<12:10, 16.99s/it]04/29/2026 02:01:36 - INFO - __main__ - Epoch: 3, Steps: 67, LRs: {'tempformer': '1.890e-05', 'depformer': '1.890e-05'}, Loss: 5.96009 (text: 4.13290, audio: 1.82719)
+[2026-04-29 02:01:38,510] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 62%|██████▏   | 68/110 [21:55<12:29, 17.85s/it]04/29/2026 02:01:56 - INFO - __main__ - Epoch: 3, Steps: 68, LRs: {'tempformer': '1.920e-05', 'depformer': '1.920e-05'}, Loss: 5.97091 (text: 4.12512, audio: 1.84578)
+[2026-04-29 02:01:58,371] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 63%|██████▎   | 69/110 [22:15<12:36, 18.45s/it]04/29/2026 02:02:16 - INFO - __main__ - Epoch: 3, Steps: 69, LRs: {'tempformer': '1.950e-05', 'depformer': '1.950e-05'}, Loss: 5.91052 (text: 4.10510, audio: 1.80542)
+[2026-04-29 02:02:18,171] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 64%|██████▎   | 70/110 [22:35<12:33, 18.83s/it]04/29/2026 02:02:36 - INFO - __main__ - Epoch: 3, Steps: 70, LRs: {'tempformer': '1.980e-05', 'depformer': '1.980e-05'}, Loss: 5.94186 (text: 4.14111, audio: 1.80074)
+[2026-04-29 02:02:37,887] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 65%|██████▍   | 71/110 [22:54<12:24, 19.09s/it]04/29/2026 02:02:55 - INFO - __main__ - Epoch: 3, Steps: 71, LRs: {'tempformer': '2.010e-05', 'depformer': '2.010e-05'}, Loss: 5.87860 (text: 4.09076, audio: 1.78784)
+[2026-04-29 02:02:57,515] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 65%|██████▌   | 72/110 [23:14<12:10, 19.23s/it]04/29/2026 02:03:15 - INFO - __main__ - Epoch: 3, Steps: 72, LRs: {'tempformer': '2.040e-05', 'depformer': '2.040e-05'}, Loss: 6.18421 (text: 4.35744, audio: 1.82677)
+[2026-04-29 02:03:17,065] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 66%|██████▋   | 73/110 [23:34<11:54, 19.32s/it]04/29/2026 02:03:34 - INFO - __main__ - Epoch: 3, Steps: 73, LRs: {'tempformer': '2.070e-05', 'depformer': '2.070e-05'}, Loss: 5.76484 (text: 4.02296, audio: 1.74188)
+[2026-04-29 02:03:36,616] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 67%|██████▋   | 74/110 [23:53<11:38, 19.40s/it]04/29/2026 02:03:54 - INFO - __main__ - Epoch: 3, Steps: 74, LRs: {'tempformer': '2.100e-05', 'depformer': '2.100e-05'}, Loss: 6.38902 (text: 4.60736, audio: 1.78166)
+[2026-04-29 02:03:56,191] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 68%|██████▊   | 75/110 [24:13<11:20, 19.45s/it]04/29/2026 02:04:14 - INFO - __main__ - Epoch: 3, Steps: 75, LRs: {'tempformer': '2.130e-05', 'depformer': '2.130e-05'}, Loss: 6.03102 (text: 4.21370, audio: 1.81731)
+[2026-04-29 02:04:15,747] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 69%|██████▉   | 76/110 [24:32<11:04, 19.53s/it]04/29/2026 02:04:33 - INFO - __main__ - Epoch: 3, Steps: 76, LRs: {'tempformer': '2.160e-05', 'depformer': '2.160e-05'}, Loss: 6.08970 (text: 4.39336, audio: 1.69635)
+[2026-04-29 02:04:35,507] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 70%|███████   | 77/110 [24:52<10:46, 19.59s/it]04/29/2026 02:04:53 - INFO - __main__ - Epoch: 3, Steps: 77, LRs: {'tempformer': '2.190e-05', 'depformer': '2.190e-05'}, Loss: 6.28893 (text: 4.47282, audio: 1.81611)
+[2026-04-29 02:04:55,218] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 71%|███████   | 78/110 [25:12<10:26, 19.59s/it]04/29/2026 02:05:13 - INFO - __main__ - Epoch: 3, Steps: 78, LRs: {'tempformer': '2.220e-05', 'depformer': '2.220e-05'}, Loss: 5.80536 (text: 4.05413, audio: 1.75123)
+[2026-04-29 02:05:14,791] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 72%|███████▏  | 79/110 [25:31<10:07, 19.59s/it]04/29/2026 02:05:32 - INFO - __main__ - Epoch: 3, Steps: 79, LRs: {'tempformer': '2.250e-05', 'depformer': '2.250e-05'}, Loss: 5.87025 (text: 4.16707, audio: 1.70317)
+[2026-04-29 02:05:34,427] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 73%|███████▎  | 80/110 [25:51<09:48, 19.62s/it]04/29/2026 02:05:52 - INFO - __main__ - Epoch: 3, Steps: 80, LRs: {'tempformer': '2.280e-05', 'depformer': '2.280e-05'}, Loss: 5.71031 (text: 3.96766, audio: 1.74265)
+[2026-04-29 02:05:54,110] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 74%|███████▎  | 81/110 [26:11<09:28, 19.60s/it]04/29/2026 02:06:11 - INFO - __main__ - Epoch: 3, Steps: 81, LRs: {'tempformer': '2.310e-05', 'depformer': '2.310e-05'}, Loss: 5.77932 (text: 3.94595, audio: 1.83337)
+[2026-04-29 02:06:13,675] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 75%|███████▍  | 82/110 [26:30<09:09, 19.62s/it]04/29/2026 02:06:31 - INFO - __main__ - Epoch: 3, Steps: 82, LRs: {'tempformer': '2.340e-05', 'depformer': '2.340e-05'}, Loss: 5.90476 (text: 4.12104, audio: 1.78373)
+[2026-04-29 02:06:33,317] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 75%|███████▌  | 83/110 [26:50<08:50, 19.64s/it]04/29/2026 02:06:51 - INFO - __main__ - Epoch: 3, Steps: 83, LRs: {'tempformer': '2.370e-05', 'depformer': '2.370e-05'}, Loss: 5.79765 (text: 4.07436, audio: 1.72329)
+[2026-04-29 02:06:53,017] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 76%|███████▋  | 84/110 [27:10<08:32, 19.71s/it]04/29/2026 02:07:11 - INFO - __main__ - Epoch: 3, Steps: 84, LRs: {'tempformer': '2.400e-05', 'depformer': '2.400e-05'}, Loss: 5.78039 (text: 4.09592, audio: 1.68448)
+[2026-04-29 02:07:12,857] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 77%|███████▋  | 85/110 [27:30<08:13, 19.75s/it]04/29/2026 02:07:31 - INFO - __main__ - Epoch: 3, Steps: 85, LRs: {'tempformer': '2.430e-05', 'depformer': '2.430e-05'}, Loss: 5.57172 (text: 3.91463, audio: 1.65709)
+[2026-04-29 02:07:32,720] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 78%|███████▊  | 86/110 [27:49<07:54, 19.76s/it]04/29/2026 02:07:50 - INFO - __main__ - Epoch: 3, Steps: 86, LRs: {'tempformer': '2.460e-05', 'depformer': '2.460e-05'}, Loss: 5.67849 (text: 3.95888, audio: 1.71962)
+[2026-04-29 02:07:52,471] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 79%|███████▉  | 87/110 [28:09<07:34, 19.74s/it]04/29/2026 02:08:10 - INFO - __main__ - Epoch: 3, Steps: 87, LRs: {'tempformer': '2.490e-05', 'depformer': '2.490e-05'}, Loss: 6.02485 (text: 4.33114, audio: 1.69371)
+[2026-04-29 02:08:12,186] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 80%|████████  | 88/110 [28:16<05:46, 15.76s/it]04/29/2026 02:08:16 - INFO - __main__ - Epoch: 3, Steps: 88, LRs: {'tempformer': '2.520e-05', 'depformer': '2.520e-05'}, Loss: 5.97873 (text: 4.34312, audio: 1.63561)
+[2026-04-29 02:08:31,899] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 81%|████████  | 89/110 [28:35<05:56, 16.96s/it]04/29/2026 02:08:36 - INFO - __main__ - Epoch: 4, Steps: 89, LRs: {'tempformer': '2.550e-05', 'depformer': '2.550e-05'}, Loss: 5.50130 (text: 3.82045, audio: 1.68084)
+[2026-04-29 02:08:51,618] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 82%|████████▏ | 90/110 [28:55<05:55, 17.78s/it]04/29/2026 02:08:56 - INFO - __main__ - Epoch: 4, Steps: 90, LRs: {'tempformer': '2.580e-05', 'depformer': '2.580e-05'}, Loss: 5.59286 (text: 3.95085, audio: 1.64201)
+[2026-04-29 02:09:11,232] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 83%|████████▎ | 91/110 [29:15<05:48, 18.33s/it]04/29/2026 02:09:16 - INFO - __main__ - Epoch: 4, Steps: 91, LRs: {'tempformer': '2.610e-05', 'depformer': '2.610e-05'}, Loss: 5.66678 (text: 3.92299, audio: 1.74379)
+[2026-04-29 02:09:30,846] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 84%|████████▎ | 92/110 [29:34<05:36, 18.71s/it]04/29/2026 02:09:35 - INFO - __main__ - Epoch: 4, Steps: 92, LRs: {'tempformer': '2.640e-05', 'depformer': '2.640e-05'}, Loss: 5.85611 (text: 4.19105, audio: 1.66505)
+[2026-04-29 02:09:50,544] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 85%|████████▍ | 93/110 [29:54<05:23, 19.02s/it]04/29/2026 02:09:55 - INFO - __main__ - Epoch: 4, Steps: 93, LRs: {'tempformer': '2.670e-05', 'depformer': '2.670e-05'}, Loss: 5.67510 (text: 4.03885, audio: 1.63626)
+[2026-04-29 02:10:10,701] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 85%|████████▌ | 94/110 [30:14<05:09, 19.37s/it]04/29/2026 02:10:15 - INFO - __main__ - Epoch: 4, Steps: 94, LRs: {'tempformer': '2.700e-05', 'depformer': '2.700e-05'}, Loss: 5.52275 (text: 3.85190, audio: 1.67086)
+[2026-04-29 02:10:30,536] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 86%|████████▋ | 95/110 [30:34<04:52, 19.50s/it]04/29/2026 02:10:35 - INFO - __main__ - Epoch: 4, Steps: 95, LRs: {'tempformer': '2.730e-05', 'depformer': '2.730e-05'}, Loss: 5.64925 (text: 3.95384, audio: 1.69541)
+[2026-04-29 02:10:50,254] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 87%|████████▋ | 96/110 [30:54<04:34, 19.57s/it]04/29/2026 02:10:55 - INFO - __main__ - Epoch: 4, Steps: 96, LRs: {'tempformer': '2.760e-05', 'depformer': '2.760e-05'}, Loss: 6.09792 (text: 4.40513, audio: 1.69279)
+[2026-04-29 02:11:09,949] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 88%|████████▊ | 97/110 [31:13<04:14, 19.58s/it]04/29/2026 02:11:14 - INFO - __main__ - Epoch: 4, Steps: 97, LRs: {'tempformer': '2.790e-05', 'depformer': '2.790e-05'}, Loss: 5.71920 (text: 4.01856, audio: 1.70064)
+[2026-04-29 02:11:29,533] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 89%|████████▉ | 98/110 [31:33<03:55, 19.59s/it]04/29/2026 02:11:34 - INFO - __main__ - Epoch: 4, Steps: 98, LRs: {'tempformer': '2.820e-05', 'depformer': '2.820e-05'}, Loss: 5.56711 (text: 3.96703, audio: 1.60009)
+[2026-04-29 02:11:49,164] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 90%|█████████ | 99/110 [31:53<03:35, 19.60s/it]04/29/2026 02:11:53 - INFO - __main__ - Epoch: 4, Steps: 99, LRs: {'tempformer': '2.850e-05', 'depformer': '2.850e-05'}, Loss: 5.88619 (text: 4.19054, audio: 1.69565)
+[2026-04-29 02:12:08,807] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 91%|█████████ | 100/110 [32:12<03:16, 19.61s/it]04/29/2026 02:12:13 - INFO - __main__ - Epoch: 4, Steps: 100, LRs: {'tempformer': '2.880e-05', 'depformer': '2.880e-05'}, Loss: 5.75663 (text: 4.06939, audio: 1.68724)
+[2026-04-29 02:12:28,431] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 92%|█████████▏| 101/110 [32:32<02:56, 19.62s/it]04/29/2026 02:12:33 - INFO - __main__ - Epoch: 4, Steps: 101, LRs: {'tempformer': '2.910e-05', 'depformer': '2.910e-05'}, Loss: 5.77733 (text: 4.15260, audio: 1.62473)
+[2026-04-29 02:12:48,237] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 93%|█████████▎| 102/110 [32:52<02:37, 19.69s/it]04/29/2026 02:12:53 - INFO - __main__ - Epoch: 4, Steps: 102, LRs: {'tempformer': '2.940e-05', 'depformer': '2.940e-05'}, Loss: 5.85106 (text: 4.13257, audio: 1.71849)
+[2026-04-29 02:13:08,095] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 94%|█████████▎| 103/110 [33:12<02:18, 19.77s/it]04/29/2026 02:13:13 - INFO - __main__ - Epoch: 4, Steps: 103, LRs: {'tempformer': '2.970e-05', 'depformer': '2.970e-05'}, Loss: 5.35899 (text: 3.71578, audio: 1.64321)
+[2026-04-29 02:13:27,849] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 95%|█████████▍| 104/110 [33:31<01:58, 19.72s/it]04/29/2026 02:13:32 - INFO - __main__ - Epoch: 4, Steps: 104, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.51512 (text: 3.84798, audio: 1.66714)
+[2026-04-29 02:13:47,366] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 95%|█████████▌| 105/110 [33:51<01:38, 19.64s/it]04/29/2026 02:13:52 - INFO - __main__ - Epoch: 4, Steps: 105, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.62632 (text: 4.00270, audio: 1.62362)
+[2026-04-29 02:14:06,781] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 96%|█████████▋| 106/110 [34:10<01:18, 19.57s/it]04/29/2026 02:14:11 - INFO - __main__ - Epoch: 4, Steps: 106, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.23623 (text: 3.70664, audio: 1.52959)
+[2026-04-29 02:14:26,188] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 97%|█████████▋| 107/110 [34:30<00:58, 19.53s/it]04/29/2026 02:14:30 - INFO - __main__ - Epoch: 4, Steps: 107, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.81745 (text: 4.17655, audio: 1.64090)
+[2026-04-29 02:14:45,685] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 98%|█████████▊| 108/110 [34:49<00:39, 19.57s/it]04/29/2026 02:14:50 - INFO - __main__ - Epoch: 4, Steps: 108, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.34453 (text: 3.72731, audio: 1.61722)
+[2026-04-29 02:15:05,317] [WARNING] [stage3.py:2114:step] 2 pytorch allocator cache flushes since last step. this happens when there is high memory pressure and is detrimental to performance. if this is happening frequently consider adjusting settings to reduce memory consumption. If you are unable to make the cache flushes go away consider adding get_accelerator().empty_cache() calls in your training loop to ensure that all ranks flush their caches at the same time
+ 99%|█████████▉| 109/110 [35:09<00:19, 19.55s/it]04/29/2026 02:15:10 - INFO - __main__ - Epoch: 4, Steps: 109, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.54420 (text: 3.89746, audio: 1.64674)
+100%|██████████| 110/110 [35:15<00:00, 15.45s/it]04/29/2026 02:15:16 - INFO - __main__ - Epoch: 4, Steps: 110, LRs: {'tempformer': '3.000e-05', 'depformer': '3.000e-05'}, Loss: 5.39335 (text: 3.72365, audio: 1.66970)
+04/29/2026 02:15:40 - INFO - accelerate.accelerator - The model is bigger than the maximum size per checkpoint (10GB) and is going to be split in 2 checkpoint shards. You can find where each parameters has been saved in the index located at /workspace/output/moshi-urdu-finetuned/step_110/model.safetensors.index.json.
+100%|██████████| 110/110 [35:39<00:00, 19.45s/it]
+
+=== Training complete ===
+Checkpoints in: /workspace/output/moshi-urdu-finetuned
+To convert latest ckpt to safetensors for inference:
+  python -m tools.zero_to_fp32 \
+      /workspace/output/moshi-urdu-finetuned/step_<N> \
+      /workspace/output/moshi-urdu-finetuned/step_<N>_fp32 \
+      --moshi_lm_kwargs_path /workspace/init_models/moshiko-urdu-float32/moshi_lm_kwargs.json
